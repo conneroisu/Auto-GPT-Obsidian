@@ -1,5 +1,6 @@
 
 <a name="readme-top"></a>
+
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
@@ -84,7 +85,9 @@ Contributors will be featured here with a link to their GitHub profile with acco
 # Acknowledgements
 [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT) - The main project that this plugin is for
 [obsidian-tools](https://github.com/mfarragher/obsidiantools) - The python library that this plugin uses to interact with Obsidian Vaults.
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/conneroisu/Auto-GPT-Obsidian.svg?style=for-the-badge
