@@ -11,7 +11,6 @@ PromptGenerator = TypeVar("PromptGenerator")
 with open(str(Path(os.getcwd()) / ".env", "r")) as fp:
     load_dotenv(stream=fp)
 
-
 class Message(TypedDict):
     role: str
     content: str
