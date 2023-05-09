@@ -1,10 +1,15 @@
-"""This is a template for Auto-GPT plugins."""
-import abc
+"""Obsidian Integrations for Auto-GPT using obsidiantools."""
+import os
+from abstract_singleton import AbstractSingleton, Singleton
+from auto_gpt_plugin_template import AutoGPTPluginTemplate
+from dotenv import load_dotenv
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, TypedDict
 
-from abstract_singleton import AbstractSingleton, Singleton
-
 PromptGenerator = TypeVar("PromptGenerator")
+
+with open(str(Path(os.getcwd()) / ".env", "r")) as fp:
+    load_dotenv(stream=fp)
 
 
 class Message(TypedDict):
@@ -12,16 +17,17 @@ class Message(TypedDict):
     content: str
 
 
-class AutoGPTPluginTemplate(AbstractSingleton, metaclass=Singleton):
+class AutoGPTObsidian(AutoGPTPluginTemplate):
     """
-    This is a template for Auto-GPT plugins.
+    Obsidian Integrations for Auto-GPT using obsidiantools.
     """
 
     def __init__(self):
         super().__init__()
-        self._name = "Auto-GPT-Plugin-Template"
+        self._name = "autogpt-obsidian"
         self._version = "0.1.0"
-        self._description = "This is a template for Auto-GPT plugins."
+        self._description = "Obsidian Integrations for Auto-GPT using obsidiantools."
+        self.vault_path = os.getenv("OBSIDIAN_VAULT_PATH")
 
     @abc.abstractmethod
     def can_handle_on_response(self) -> bool:
@@ -44,7 +50,7 @@ class AutoGPTPluginTemplate(AbstractSingleton, metaclass=Singleton):
 
         Returns:
             bool: True if the plugin can handle the post_prompt method."""
-        return False
+        return True
 
     @abc.abstractmethod
     def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
@@ -57,7 +63,46 @@ class AutoGPTPluginTemplate(AbstractSingleton, metaclass=Singleton):
         Returns:
             PromptGenerator: The prompt generator.
         """
-        pass
+        from .obsidian import (
+            get_notes,
+            get_note_by_title,
+            get_note_metadata,
+            get_note_content,
+            get_note_path,
+            get_note_title,
+            get_note_tags,
+            get_note_links,
+            get_note_incoming_links,
+            get_note_outgoing_links,
+            get_notes_by_tag,
+            get_notes_by_tags,
+            get_all_tags,
+            get_all_notes,
+            get_note_stats,
+            change_note_title,
+            change_note_tags,
+            change_note_aliases,
+            change_note_summary,
+            change_note_content,
+            create_full_note,
+            move_note,
+            append_note,
+        )
+
+        prompt.add_command(
+            "obsidian_create_note",
+            "Create a new Obsidian note in the vault with a given title, aliases, tags, summary, and content.",
+            {
+                "title": "<title>",
+                "aliases": "<aliases>",
+                "tags": "<tags>",
+                "summary": "<summary>",
+                "content": "<content>",
+            },
+            create_full_note,
+        )
+
+        return prompt
 
     @abc.abstractmethod
     def can_handle_on_planning(self) -> bool:
@@ -69,9 +114,7 @@ class AutoGPTPluginTemplate(AbstractSingleton, metaclass=Singleton):
         return False
 
     @abc.abstractmethod
-    def on_planning(
-        self, prompt: PromptGenerator, messages: List[Message]
-    ) -> Optional[str]:
+    def on_planning(self, prompt: PromptGenerator, messages: List[Message]) -> Optional[str]:
         """This method is called before the planning chat completion is done.
 
         Args:
@@ -211,9 +254,7 @@ class AutoGPTPluginTemplate(AbstractSingleton, metaclass=Singleton):
         pass
 
     @abc.abstractmethod
-    def can_handle_chat_completion(
-        self, messages: Dict[Any, Any], model: str, temperature: float, max_tokens: int
-    ) -> bool:
+    def can_handle_chat_completion(self, messages: Dict[Any, Any], model: str, temperature: float, max_tokens: int) -> bool:
         """This method is called to check that the plugin can
           handle the chat_completion method.
 
@@ -228,9 +269,7 @@ class AutoGPTPluginTemplate(AbstractSingleton, metaclass=Singleton):
         return False
 
     @abc.abstractmethod
-    def handle_chat_completion(
-        self, messages: List[Message], model: str, temperature: float, max_tokens: int
-    ) -> str:
+    def handle_chat_completion(self, messages: List[Message], model: str, temperature: float, max_tokens: int) -> str:
         """This method is called when the chat completion is done.
 
         Args:
@@ -245,24 +284,20 @@ class AutoGPTPluginTemplate(AbstractSingleton, metaclass=Singleton):
         pass
 
     @abc.abstractmethod
-    def can_handle_text_embedding(
-        self, text: str
-    ) -> bool:
+    def can_handle_text_embedding(self, text: str) -> bool:
         """This method is called to check that the plugin can
           handle the text_embedding method.
         Args:
-            text (str): The text to be convert to embedding.
+            text (str): The text to be converted to embedding.
           Returns:
               bool: True if the plugin can handle the text_embedding method."""
         return False
-    
+
     @abc.abstractmethod
-    def handle_text_embedding(
-        self, text: str
-    ) -> list:
+    def handle_text_embedding(self, text: str) -> list:
         """This method is called when the chat completion is done.
         Args:
-            text (str): The text to be convert to embedding.
+            text (str): The text to be converted to embedding.
         Returns:
             list: The text embedding.
         """
