@@ -24,9 +24,8 @@
   <summary>Table of Contents</summary>
   <ol>
     <li><a href="#features">Features</a></li>
-    <li>
-        <a href="#getting-started">Getting Started</a>
-    </li>
+    <li> <a href="#getting-started">Getting Started</a> </li>
+    <li> <a href="#use-cases">Use Cases</a> </li>
     <li><a href="#commands">Commands</a></li>
     <li><a href="#contribution">Contribution</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
@@ -68,6 +67,8 @@ If you encounter problems or have any ideas, feel free to open an issue or pull 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+## Use Cases 
+Ask Autogpt to create flashcards for studying automatically. 
 ## Contribution
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
 

@@ -1,5 +1,5 @@
 black
-obsidiantools
+obsidiantools~=0.10.0
 isort
 flake8
 pylint
@@ -8,3 +8,4 @@ wheel
 setuptools
 build
 twine
+python-dotenv~=1.0.0
