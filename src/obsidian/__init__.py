@@ -1,15 +1,11 @@
 """Obsidian Integrations for Auto-GPT using obsidiantools."""
 import os
-from abstract_singleton import AbstractSingleton, Singleton
-from auto_gpt_plugin_template import AutoGPTPluginTemplate
-from dotenv import load_dotenv
-from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, TypedDict
+
+from auto_gpt_plugin_template import AutoGPTPluginTemplate
 
 PromptGenerator = TypeVar("PromptGenerator")
 
-with open(str(Path(os.getcwd()) / ".env", "r")) as fp:
-    load_dotenv(stream=fp)
 
 class Message(TypedDict):
     role: str
@@ -27,7 +23,10 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
         self._version = "0.1.0"
         self._description = "Obsidian Integrations for Auto-GPT using obsidiantools."
         self.vault_path = os.getenv("OBSIDIAN_VAULT_PATH")
-
+        if self.vault_path is None:
+            print(
+                "WARNING: The OBSIDIAN_VAULT_PATH environment variable is not set. Please set it to the path of the Obsidian vault wished to be interacted with."
+            )
     def can_handle_on_response(self) -> bool:
         """This method is called to check that the plugin can
         handle the on_response method.
@@ -62,6 +61,7 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
             create_note
         )
 
+
         prompt.add_command(
             "obsidian_create_note",
             "Create a new Obsidian note in the vault with a given title, aliases, tags, summary, and content.",
@@ -70,8 +70,9 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
                 "aliases": "<aliases>",
                 "tags": "<tags>",
                 "summary": "<summary>",
-                "content": "<content>",
+                "content": "<content>"
             },
+            create_note
         )
 
         return prompt
@@ -178,7 +179,7 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
         return False
 
     def pre_command(
-        self, command_name: str, arguments: Dict[str, Any]
+            self, command_name: str, arguments: Dict[str, Any]
     ) -> Tuple[str, Dict[str, Any]]:
         """This method is called before the command is executed.
 

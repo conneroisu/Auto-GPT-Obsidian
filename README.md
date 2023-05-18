@@ -42,6 +42,12 @@ This plugin is a work in progress.
     pip install obsidiantools python-dotenv auto_gpt_plugin_template
     ```
 
+### Getting Started
+Make sure that you have completed the [prerequisites](#prerequisites) before continuing. Additionally, the RESTRICT_TO_WORKSPACE variable in the .env file for Auto-GPT must be set to False as seen below. 
+```
+RESTRICT_TO_WORKSPACE=False
+```
+
 ### Download
 [Click Here](https://github.com/conneroisu/Auto-GPT-Obsidian/archive/refs/heads/master.zip) to download the source code as **ZIP**, and place the **ZIP** file under `Auto-GPT/plugins/`.
 
