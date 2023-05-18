@@ -88,8 +88,36 @@ pytest -vs
 Contributors will be featured here with a link to their GitHub profile with accompanying social image.
 
 [Conner Ohnesorge](connerohnesorge.mixa.site)
-
-# Acknowledgements
+## Commands
+obsidian_insert_content Command
+obsidian_add_aliases Command
+obsidian_get_maths Command
+obsidian_kanban_move Command
+obsidian_kanban_sort Command
+obsidian_kanban_add Command
+obsidian_create_callout Command
+obsidian_add_tags Command
+obsidian_get_note_metadata Command
+obsidian_get_notes_by_tags Command
+obsidian_move_note Command
+obsidian_insert_content Command
+obsidian_add_aliases Command
+obsidian_get_maths Command
+obsidian_kanban_move Command
+obsidian_kanban_sort Command
+obsidian_kanban_add Command
+obsidian_create_callout Command
+obsidian_add_tags Command
+obsidian_get_note_metadata Command
+obsidian_get_notes_by_tags Command
+obsidian_move_note Command
+obsidian_change_title Command
+obsidian_get_note_stats Command
+obsidian_create_note Command
+obsidian_get_note_metadata Command
+obsidian_create_note_with_templates Command
+obsidian_get_all_notes Command
+## Acknowledgements
 [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT) - The main project that this plugin is for
 [obsidian-tools](https://github.com/mfarragher/obsidiantools) - The python library that this plugin uses to interact with Obsidian Vaults.
 
