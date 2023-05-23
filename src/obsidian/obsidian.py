@@ -13,16 +13,6 @@ import guidance
 Obsidian Integrations for Auto-GPT using custom API functions and obsidiantools.
 """
 
-def _note_has_tags(title: str) -> bool: 
-    """ 
-    Check if a note has tags. Returns true if so. 
-
-    Parameters: 
-        - title: The title of the note. In other words, the title is the name of the note. The title is also the name of the file to be produced.
-    Returns:
-        - True if the note has tags, False if not.
-    """
-
 def _create_note(title: str, content: str) -> str:
     """
     Create a note inside the vault with a title, content, tags, and a summary.

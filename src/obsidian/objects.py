@@ -17,25 +17,72 @@ class Note:
         self.tags = None
         self.summary = None
         self.content = None
-    def is_value_in_frontmatter(self, value):
+        self.frontmatter = None
+        self.dataviewmetadata = None
+
+    def get_frontmatter(self):
         """
-        Determines whether the value is in the frontmatter of the note as a metadata value.
-        TODO - Need to implement and finish this method.
+        Creates a frontmatter object for the note containing the metadata values of the note.
+
+        Returns:
+            A frontmatter object for the note containing the metadata values of the note.
         """
-        pass
+        for line in content:
+            if line.startswith("---") and line.endswith("\n"):
+                beginning_line = line
+                for sline in content:
+                    if sline.startswith("---") and sline.endswith(
+                            "\n") and sline != beginning_line:
+                        end_line = sline
+        # Now that we have the beginning and end of the frontmatter, we can check if the value is in the frontmatter.
+        inside = False
+        for line in content:
+            if line == beginning_line:
+                inside = True
+            if line == end_line:
+                inside = False
+            if inside:
+                # for each value in the frontmatter set frontmatter.value to said value.
+                for char in line:
+                    value = line.split(":")[0]
+                    data = line.split(":")[1]
+                    self.frontmatter.value = data
+        return self.frontmatter
+
+    def get_value_in_frontmatter(self, value):
+        """
+        Get the predefined value in the frontmatter of the note.
+
+        Parameters:
+            value: The value to get from the frontmatter.
+
+        Returns:
+            The value in the frontmatter. If the value is not in the frontmatter, returns None.
+        """
+        return frontmatter.value
+
     def is_value_in_content_as_dataview(self, value):
         """
         Determines whether the value is in the content of the note as a dataview.
-        TODO - Need to implement dataview syntax
-        """
-        pass
 
+        Parameters:
+            value: The value to check for in the content in dataview syntax.
+
+        Returns:
+            True if the value is in the content, False otherwise.
+        """
+        value += "::"
+        for line in content:
+            if line.startswith(value):
+                value = line.split("::")[0]
+                data = line.split("::")[1]
+                self.dataviewmetadata.value = data
     def get_summary(self):
         """
         Get the summary of the note defined in the frontmatter or in dataview syntax.
         TODO - Need to implement dataview syntax and finish this method.
         """
-         pass
+
     def get_tags(self):
         """
         Get the tags of the note defined in the frontmatter or in dataview syntax.
@@ -83,18 +130,26 @@ class Note:
         TODO - this method is not implemented yet.
         """
 
-        pass 
+        pass
 
 
-    def change_summary(self, summary):
-        """
-        Change the summary of the note.
+def has_tags(title: str) -> bool:
+    """
+    Check if a note has tags. Returns true if so.
 
-        Args:
-            summary: The new summary of the note.
-        TODO - this method is not implemented yet.
-        """
-        pass 
+    Parameters:
+        - title: The title of the note. In other words, the title is the name of the note. The title is also the name of the file to be produced.
+    Returns:
+        - True if the note has tags, False if not.
+    """
 
 
-    
+def change_summary(self, summary):
+    """
+    Change the summary of the note.
+
+    Args:
+        summary: The new summary of the note.
+    TODO - this method is not implemented yet.
+    """
+    pass
