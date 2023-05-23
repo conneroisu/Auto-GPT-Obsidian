@@ -2,6 +2,8 @@
 import os
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, TypedDict
 
+from .obsidian import _create_note
+
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
 
 PromptGenerator = TypeVar("PromptGenerator")
@@ -14,7 +16,7 @@ class Message(TypedDict):
 
 class AutoGPTObsidian(AutoGPTPluginTemplate):
     """
-    Obsidian Integrations for Auto-GPT using obsidiantools.
+    Obsidian Integrations for Auto-GPT using obsidiantools and custom objects.
     """
 
     def __init__(self):
@@ -27,6 +29,7 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
             print(
                 "WARNING: The OBSIDIAN_VAULT_PATH environment variable is not set. Please set it to the path of the Obsidian vault wished to be interacted with."
             )
+
     def can_handle_on_response(self) -> bool:
         """This method is called to check that the plugin can
         handle the on_response method.
@@ -57,22 +60,16 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
         Returns:
             PromptGenerator: The prompt generator.
         """
-        from .obsidian import (
-            create_note
-        )
 
 
         prompt.add_command(
             "obsidian_create_note",
-            "Create a new Obsidian note in the vault with a given title, aliases, tags, summary, and content.",
+            "Create a new Obsidian note in the vault with a given title and content.",
             {
                 "title": "<title>",
-                "aliases": "<aliases>",
-                "tags": "<tags>",
-                "summary": "<summary>",
                 "content": "<content>"
             },
-            create_note
+            _create_note
         )
 
         return prompt
@@ -212,7 +209,8 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
         """
         pass
 
-    def can_handle_chat_completion(self, messages: Dict[Any, Any], model: str, temperature: float, max_tokens: int) -> bool:
+    def can_handle_chat_completion(self, messages: Dict[Any, Any], model: str, temperature: float,
+                                   max_tokens: int) -> bool:
         """This method is called to check that the plugin can
           handle the chat_completion method.
 

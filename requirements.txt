@@ -8,4 +8,5 @@ wheel
 setuptools
 build
 twine
+guidance
 python-dotenv~=1.0.0

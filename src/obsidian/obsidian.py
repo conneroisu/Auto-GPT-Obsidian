@@ -1,96 +1,85 @@
-from . import AutoGPTObsidian
+"""
+Import the `os` module to access the environment variables from the `.env` file.
+"""
 import os
-import obsidiantools.api as otools
-
-plugin = AutoGPTObsidian()
+from typing import TextIO
 
 """
-Obsidian Integrations for Auto-GPT using obsidiantools.
+Import the `guidance` module to access microsoft guidance a way to inference language models.
+"""
+import guidance
+
+"""
+Obsidian Integrations for Auto-GPT using custom API functions and obsidiantools.
 """
 
-def vault_path_set() -> bool:
-    """
-    Check to see if the vault path is set.
-    """
-    return True if getvaultpath() is not None else False
+def _note_has_tags(title: str) -> bool: 
+    """ 
+    Check if a note has tags. Returns true if so. 
 
-def add_tags_to_note(note_path, tags):
-    """
-    Add tags to an existing note.
-
-    Parameters:
-        - path: The path to the note to add tags to.
-        - tags: The tags to add to the note in a comma-separated string.
+    Parameters: 
+        - title: The title of the note. In other words, the title is the name of the note. The title is also the name of the file to be produced.
     Returns:
-        - a string explaining the result of the operation.
+        - True if the note has tags, False if not.
     """
-    exists = os.path.isfile(note_path)
-    if not exists:
-        return "The note specified does not exist."
-    # Check to see if there are already tags in the note.
-    note = open(note_path, 'r')
-    note_lines = note.readlines()
-    ## Check if tags: exists in the note's frontmatter
-    for line in note_lines:
-        if line.startswith("tags:"):
-            # check if the tags are enclosed in brackets
-            if line.startswith("tags: ["):
-                # If they are, remove the end bracket and add the tags to the line, and add an enclosing bracket.
-                line = line[:-1] + ", " + tags + "]"
-                return "Tags added to note successfully in the frontmatter."
-        # If the tags are in list format, add each tag to the list as new tags.
-        elif line.startswith("tags:") and line[line.index() + 1].startswith("-") and not line[line.index() + 1].startswith("---")
-            # insert each tag individually into the list with preceding - and a space.
-            tags_list = tags.split(",").replace(" ", "")
-            for tag in tags_list:
-                line = line + "\n- " + tag
-            return "Tags added to note successfully in the frontmatter."
-            # If they are not, add the tags to the line.
-        ## Check if tags:: exists in the note's content as the start of a line
-        elif line.startswith("tags::"):
-            # If it does, add the tags to the line.
-            line = line + " " + tags
-            return "Tags added to note successfully in the content via an append."
-        else:
-            # If it does not, add the tags to the line as tags: <tags> in the frontmatter.
-            # If a frontmatter exists, add the tags to the frontmatter.
-            # If a frontmatter does not exist, create a frontmatter and add the tags to it.
-def create_note(title, aliases, tags, summary, content):
+
+def _create_note(title: str, content: str) -> str:
     """
     Create a note inside the vault with a title, content, tags, and a summary.
 
     Parameters:
-        - title: The title of the note ending in `.md`.
-        - content: The content of the note to be written in Markdown.
-        - tags: The tags of the note categorizing the content of the note.
-        - summary: The summary of the note.
+        - title: The title of the note. In other words, the title is the name of the note. The title is also the name of the file to be produced.
+        - content: The content of the note to be written in Markdown. In other words, the content of a note is the text to be placed in the main body of the note. 
     Returns:
-        - True if the note was created successfully, False otherwise.
+        - the created note content.
 
     """
-    # Get the vault path from the config.
-    vault_path = plugin.vault_path
-    parent = {"vault_path": vault_path}
+    # Set guidance's OpenAI Model to "text-davinci-003"
+    guidance.llm = guidance.llms.OpenAI("text-davinci-003")
+    # Set the vault path with the environment variable from the `.env` file.
+    vault_path = os.getenv("OBSIDIAN_VAULT_PATH")
 
-    file = open(vault_path + os.path.sep + title, 'w')
-    file.write("---\n")
-    file.write("aliases: " + aliases + "\n")
-    file.write("tags: " + tags + "\n")
-    file.write("summary: " + summary + "\n")
-    file.write("---\n")
-    file.write(content)
+    # Create the note with the title and content. Generate the tags, aliases, and summary with guidance.
+    create_note_program = guidance("""The following is a note creation program in Markdown format for Obsidian MD. 
+    ---
+    title: {{title}} 
+    aliases: {{gen 'aliases'}} 
+    tags: {{gen 'tags'}}
+    summary: {{gen 'summary'}}  
+    --- 
+    {{content}} 
+    """)
+    created_note_content = create_note_program(
+        title=title,
+        content=content
+    )
+    with open(f"{vault_path}{os.sep}{title}.md", "w") as file:
+        file.write(created_note_content)
+        file.close()
 
-    file.close()
+    return created_note_content
 
-    return True
 
-def insert(content, note):
+def _find_note_by_title(title: str) -> TextIO | None:
     """
-    Insert content into a note.
+    Find a note inside the vault with a title.
 
     Parameters:
-        - content: The content to insert into the note.
-        - note: The note to insert the content into.
+        - title: The title of the note to find in the vault. In other words, the title is the name of the note. The title is also the name of the file to be produced.
     Returns:
-        - The note with the inserted content.
+        - the found file. Otherwise, returns None.
     """
+    vault_path = os.getenv("OBSIDIAN_VAULT_PATH")
+
+
+    if not title.endswith(".md"):
+        title += ".md"
+
+    # Find the note with the title in the vault.
+
+    for root, dirs, files in os.walk(vault_path):
+        for file in files:
+            if file.endswith(".md") and file == title:
+                with open(f"{vault_path}{os.sep}{title}.md", "r") as found_note:
+                    return found_note
+    return None

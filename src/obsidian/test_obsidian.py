@@ -1,30 +1,30 @@
-# Integration tests
-from .obsidian import create_note, get_vault_path
+"""
+Import the `os` module to access the environment variables from the `.env` file.
+"""
+import os
 
-MOCK_VAULT_PATH = "../test_vault/"
+"""
+Import the obsidian module to access the obsidian plugin commands.
+"""
+from obsidian import _create_note, _find_note_by_title
 
-def test_get_vault_path():
-    """
-    Test the retrieval of the vault path with `get_vault_path()`.
-    """
-    # Get the vault path.
-    vault_path = get_vault_path()
 
-    # Check that the vault path is of type str.
-    assert type(vault_path) == str
-def test_create_note():
+def test_create_note() -> None:
     """
-    Test the creation of a note with `create_note()`.
+    Tests the creation of a note with `create_note()`. More specifically, this test creates a note that is titled "test_note" and has the content "This is a test note."
+    Additionally, this test checks that the note is created.
     """
-    AutoGPTObsidian.vault_path = MOCK_VAULT_PATH
-    # Create a note.
-    note = create_note(
+    # Set the vault path with the environment variable from the `.env` file.
+    vault_path = os.getenv("OBSIDIAN_VAULT_PATH")
+
+    # Attempt note creation with `create_note()` with the title "test_note" and the content "This is a test note."
+    response = _create_note(
         title="test_note",
-        aliases="test_alias",
         content="This is a test note.",
-        tags="test_tag",
-        summary="This is a test summary."
     )
 
-    # Check that the note was created.
-    assert note is not None
+    with _find_note_by_title(title="test_note") as file:
+        # Check that the note was created.
+        assert file.read() == response
+        file.close()
+        os.remove(f"{vault_path}{os.sep}test_note.md")
