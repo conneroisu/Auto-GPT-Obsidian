@@ -88,23 +88,6 @@ class Note:
         Get the tags of the note defined in the frontmatter or in dataview syntax.
         TODO - Need to implement dataview syntax and finish this method.
         """
-    def get_aliases(self):
-        """
-        Get the aliases of the note defined in the frontmatter or in dataview syntax.
-        TODO - Need to implement dataview syntax and finish this method.
-        """
-        aliases = None
-        note = open(self.path, "r")
-        # frontmatter check
-        for line in note.readlines():
-            if line == "---":
-                inside = true
-                break
-            if inside:
-                if line.startswith("aliases:"):
-                    aliases = line.split(":")[1]
-                    break
-           pass
     def get_title(self):
         """
         Get the title of the note.
