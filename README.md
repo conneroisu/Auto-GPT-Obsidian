@@ -1,3 +1,4 @@
+# Obsidian AutoGPT Plugin
 
 <a name="readme-top"></a>
 
@@ -14,7 +15,7 @@
 <h3 align="center">Auto-GPT-Obsidian</h3>
 
   <p align="center">
-    Power Auto-GPT with Obsidian!
+    Power Auto-GPT with Your Obsidian Vault and Vise Versa!
   </p>
 </div>
 
@@ -23,7 +24,7 @@
   <summary>Table of Contents</summary>
   <ol>
     <li><a href="#features">Features</a></li>
-    <li> <a href="#getting-started">Getting Started</a> </li>
+    <li><a href="#getting-started">Getting Started</a></li>
     <li><a href="#use-cases">Use Cases</a> </li>
     <li><a href="#commands">Commands</a></li>
     <li><a href="#contribution">Contribution</a></li>
@@ -31,9 +32,18 @@
   </ol>
 </details>
 
-# Features
+## Introduction 
 
-- Create notes in Obsidian with Auto-GPT automatically (Fully Implemented)
+The AutoGPT GitHub project refers to a project hosted on the GitHub platform that aims to develop and implement Generative Pre-trained Transformers (GPT). GPT models are a type of artificial intelligence model designed for natural language processing tasks such as language translation, text summarization, and question-answering.
+
+It provides access to a wide range of open-source projects and repositories, among which the AutoGPT project could potentially be found. However, it is important to note that there is no official AutoGPT project from OpenAI. The AutoGPT project can be best described as an early attempt at autonomous AI system develop open-source that sets it's own tasks and goals. Instead of a single company holding your future in its hands, Auto-GPT is pushing for the best, autonomous AI assistant for every device for every person. In the near future, we want you to be able to accomplish more everyday. With the help of the incredible open-source community, AutoGPT making approximately a month’s progress every 48 hours. To simplify, with the posibility of over-simplifying, AutoGPT is an experimental open-source attempt to make GPT-4 fully autonomous.
+
+## New to AutoGPT?
+
+
+## Features
+
+- Create notes in Obsidian with Auto-GPT automatically
 - Create flashcards in Obsidian with Auto-GPT automatically 
 - Create notes in styled/templated markdown with Auto-GPT automatically 
 
@@ -83,18 +93,19 @@ Either navigate to https://github.com/conneroisu/Auto-GPT-Obsidian/archive/refs/
 
 1. Add this plugin to the `ALLOWLISTED_PLUGINS` variable in the `.env` file for Auto-GPT. More specifically, append `AutoGPTObsidian` to `ALLOWLISTED_PLUGINS` in the `.env` file.
 
-```
+```.env
 ALLOWLISTED_PLUGINS=AutoGPTObsidian
 ```
 
-2. Add the path to your Obsidian vault to the `OBSIDIAN_VAULT_PATH` variable in the `.env` file for Auto-GPT. More specifically, append the path to your Obsidian vault to `OBSIDIAN_VAULT_PATH` in the `.env` file.
+2. Add the path to your Obsidian vault create a public or private github repository for your vault variable in the `.env` file for Auto-GPT. More specifically, append the path to your Obsidian vault to `OBSIDIAN_VAULT_PATH` in the `.env` file.
 
-```
+```.env
 ################################################################################
 ### Obsidian
 ################################################################################
 
-OBSIDIAN_VAULT_PATH=/path/to/your/obsidian/vault
+OBSIDIAN_VAULT_GIT_URL=https://github.com/conneroisu/Auto-GPT-Obsidian-Example-Vault
+OBSIDIAN_FLASHCARD_SUBDIRECTORY=/internal/vault/path/
 ```
 
 Run Auto-GPT and enjoy integrations of Auto-GPT with Obsidian!
@@ -110,9 +121,10 @@ If you encounter problems or have any ideas, feel free to open an issue or pull 
 
 ## Use Cases
 
-Ask Autogpt to create flashcards for studying automatically.
+#### Ask Autogpt to create automatically flashcards for studying. (similar to the arcana plugin, but automatically generated from your notes)
 
-# Contribution
+
+## Contribution
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
 

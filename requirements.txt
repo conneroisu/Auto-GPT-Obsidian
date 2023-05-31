@@ -8,5 +8,7 @@ wheel
 setuptools
 build
 twine
+pytest
+GitPython
 guidance
 python-dotenv~=1.0.0

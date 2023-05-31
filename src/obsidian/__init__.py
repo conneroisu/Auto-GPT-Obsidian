@@ -71,6 +71,13 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
             },
             _create_note
         )
+        prompt.add_command( 
+            "obsidian_sync_vault", 
+            "Sync the Obsidian Vault in the workspace with the remote vault.",
+            {},
+            _sync_vault
+        )
+
 
         return prompt
 
