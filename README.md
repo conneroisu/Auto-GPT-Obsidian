@@ -33,19 +33,19 @@
 </details>
 
 ## Introduction 
+This plugin for [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT) allows for robust interactions with Obsidian Markdown Elements/Sytax. Also, this plugin povides toolings for [Auto-GPT Agents](https://github.com/Significant-Gravitas/Auto-GPT) to create flashcards and featured notes programmatically. Additionally, povides various interfaces of the corresponding data elements from notes. 
 
-The AutoGPT GitHub project refers to a project hosted on the GitHub platform that aims to develop and implement Generative Pre-trained Transformers (GPT). GPT models are a type of artificial intelligence model designed for natural language processing tasks such as language translation, text summarization, and question-answering.
-
-It provides access to a wide range of open-source projects and repositories, among which the AutoGPT project could potentially be found. However, it is important to note that there is no official AutoGPT project from OpenAI. The AutoGPT project can be best described as an early attempt at autonomous AI system develop open-source that sets it's own tasks and goals. Instead of a single company holding your future in its hands, Auto-GPT is pushing for the best, autonomous AI assistant for every device for every person. In the near future, we want you to be able to accomplish more everyday. With the help of the incredible open-source community, AutoGPT making approximately a month’s progress every 48 hours. To simplify, with the posibility of over-simplifying, AutoGPT is an experimental open-source attempt to make GPT-4 fully autonomous.
-
-## New to AutoGPT?
 
 
 ## Features
 
-- Create notes in Obsidian with Auto-GPT automatically
-- Create flashcards in Obsidian with Auto-GPT automatically 
+- Provides various features that coinside with Obsidian Vault makdown standards and features 
+- Expand on or leave footnotes in you notes progrrammatically as autogpt or as commands from autogpt to futher discover an topic. 
+- Create notes in Obsidian with Auto-GPT automatically 
+- Create flashcards in Obsidian with Auto-GPT automatically with the [Spaced Repetition Plugin](https://github.com/st3v3nmw/obsidian-spaced-repetition) for [Obsidian MD](https://obsidian.md/). 
+- Use an (soon to be) Community Accepted Plugins for aiding in the syncing of your vault to this plugin, [git-gpt-sync](https://github.com/conneroisu/git-gpt-sync).  
 - Create notes in styled/templated markdown with Auto-GPT automatically 
+
 
 ## Prerequisites
 
@@ -58,19 +58,7 @@ pip install obsidiantools python-dotenv auto_gpt_plugin_template
 
 ## Getting Started
 
-Make sure that you have completed the [prerequisites](#prerequisites) before continuing. Additionally, the RESTRICT_TO_WORKSPACE variable in the .env file for Auto-GPT must be set to False as seen below.
-
-```
-RESTRICT_TO_WORKSPACE=False
-```
-
-## Download
-
-Thanks for considering to download the Auto-GPT-Obsidian Plugin. The best/recommended way to install is via the terminal, but below there are a few other ways to install the plugin. 
-
-#### Terminal (Recommended)
-
-To download it directly from your Auto-GPT directory, you can run this command on Linux or MacOS:
+To download it directly from your Auto-GPT directory (Once finished and accepted), you can run this command on Linux or MacOS:
 
 ```bash
 curl -L -o ./plugins/Auto-GPT-Obsidian.zip https://github.com/conneroisu/Auto-GPT-Obsidian/archive/refs/heads/master.zip
@@ -104,8 +92,16 @@ ALLOWLISTED_PLUGINS=AutoGPTObsidian
 ### Obsidian
 ################################################################################
 
+## OBSIDIAN_VAULT_GIT_URL - the repository url (without .git) of the vault.
+## OBSIDIAN_FLASHCARD_SUBDIRECTORY - the subdirectory in which to create flashcards with spaced repition format/syntax.
+## OBSIDIAN_GITHUB_API_KEY - the API KEY to which responsibilities inside of the github repository ahave been allowed
+## OBSIDIAN_GITHUB_USERNAME - the username of the account housing the github repository and key. 
+
 OBSIDIAN_VAULT_GIT_URL=https://github.com/conneroisu/Auto-GPT-Obsidian-Example-Vault
 OBSIDIAN_FLASHCARD_SUBDIRECTORY=/internal/vault/path/
+OBSIDIAN_GITHUB_API_KEY=<github api key/token>
+OBSIDIAN_GITHUB_USERNAME=<github username>
+
 ```
 
 Run Auto-GPT and enjoy integrations of Auto-GPT with Obsidian!
@@ -114,15 +110,15 @@ Run Auto-GPT and enjoy integrations of Auto-GPT with Obsidian!
 
 If you encounter problems or have any ideas, feel free to open an issue or pull request.
 
-- [issues](https://github.com/conneroisu/Auto-GPT-Obsidian/issues)
-- [pull requests](https://github.com/conneroisu/Auto-GPT-Obsidian/pulls)
+- [Issues](https://github.com/conneroisu/Auto-GPT-Obsidian/issues)
+- [Pull Requests](https://github.com/conneroisu/Auto-GPT-Obsidian/pulls)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Use Cases
+## Example Use Cases
 
-#### Ask Autogpt to create automatically flashcards for studying. (similar to the arcana plugin, but automatically generated from your notes)
-
+#### Ask Autogpt to create automatically flashcards for studying. (similar to the [arcana plugin](https://github.com/evanaze/obsidian-asana-plugin), but automatically generated from your notes).
+#### Automate the filling out of boing but potentially impotant metadata in notes in the vault.
 
 ## Contribution
 
@@ -140,7 +136,7 @@ pytest -vs
 
 Contributors will be featured here with a link to their GitHub profile with accompanying social image.
 
-[Conner Ohnesorge](connerohnesorge.mixa.site)
+[Conner Ohnesorge](https://connerohnesorge.mixa.site)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -156,8 +152,10 @@ This command creates a note inside the vault with a title, content, tags, and a 
 
 ## Acknowledgements
 
-[Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT) - The main project that this plugin is for
-[obsidian-tools](https://github.com/mfarragher/obsidiantools) - The python library that this plugin uses to interact with Obsidian Vaults.
+- [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT) - The main project that this plugin is for
+- [obsidian-tools](https://github.com/mfarragher/obsidiantools) - The python library that this plugin uses to interact with Obsidian Vaults.
+- [Microsoft Guidance](https://github.com/microsoft/guidance)
+- [Arcana  Plugin for Obsidian](https://github.com/evanaze/obsidian-asana-plugin) - Inspiation to make flashcard system. 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

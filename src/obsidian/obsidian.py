@@ -2,21 +2,18 @@
 Import the `os` module to access the environment variables from the `.env` file.
 """
 import os
-
-""" 
-Import the TextIO type from the `typing` module to use as a type hint for the 
-"""
-from typing import TextIO
+from obsidian_note import Obsidian_Note
+from obsidian_vault import Obsidian_Vault
 
 """
-Import the `guidance` module to access microsoft guidance a way to inference language models.
+Import the `guidance` module to access microsoft guidance's python libraries allowing for more ways to inference language models.
 """
 import guidance
 
-""" 
-Import repo from GitPython for syncing the vault with the remote repository. 
-""" 
-from git import Repo
+"""
+Import the datetime module for accurate date and time
+"""
+import datetime 
 
 """
 Obsidian Integrations for Auto-GPT using custom API functions and obsidiantools.
@@ -30,6 +27,8 @@ def _get_valid_tags() -> list:
     # Set guidance's OpenAI Model to "text-davinci-003"
     guidance.llm = guidance.llms.OpenAI("text-davinci-003")
 
+    # Sync the vault to most recent changes
+    _sync_vault()
     vault_path = os.path.join(current_working_directory, "autogpt", "auto_gpt_workspace", git_url.split("/")[-1])
 
     # Create a list of valid tags from the vault
@@ -56,27 +55,11 @@ def _get_valid_tags() -> list:
 
     return valid_tags
 
-def _create_notes(titles[]: str, contents[]: str) -> list:
-    """
-    Creates a list of notes inside the vault with titles, contents, tags, types,  and summaries using the _create_note function.
-
-    Returns: a list of strings containing the result of each _create_note function call. 
-    """
-    responses = []
-
-    for title in titles:
-        for content in contents:
-            responses += _create_note(title, content)
-            
-    return responses
-
 def _create_note(title: str, content: str) -> str:
     """
-    Create a note inside the vault with a title, content, tags, type,  and a summary.
-
+    Create a note inside the vault with a title, content, tags, type,  and a summary within the frontmatter of said note following the Obsidian format
     Parameters:
-        - title: The title of the note. In other words, the title 
-        is the name of the note. The title is also the name of the file to be produced.
+        - title: The title of the note. In other words, the title is the name of the note. The title is also the name of the file to be produced.
 
         - content: the content of the note to be written in Markdown. In other words, the content of a note is the text to be placed in the main body of the note excluding the frontmatter. 
     Returns:
@@ -92,11 +75,24 @@ def _create_note(title: str, content: str) -> str:
 
     vault_path = os.path.join(current_working_directory, "autogpt", "auto_gpt_workspace", git_url.split("/")[-1])
 
+    ## Handle Collisions  
+    ## TODO Need to finish the Collisions Code here to 
+    note = _find_note_by_title(title) 
+    if not note is None: 
+        # Handle Collision
+        HandleCollision(note, title, content)
+        
+        
+    
+    if title.endswith(".md"): 
+        title = title[:-3]
+        title = title + ".md"
+
     # Create a new note with the title and content
-    note = open(os.path.join(vault_path, title + ".md"), "w") 
+    note = open(os.path.join(vault_path, title), "w") 
+
 
     current_date = datetime.datetime.now()
-
     # Create a valid tags list file in the workspace
     valid_tags_file = open(os.path.join(current_working_directory, "valid_tags.txt"), "w")
 
@@ -105,7 +101,7 @@ def _create_note(title: str, content: str) -> str:
     create_note_program = guidance('''
     {{#system~}}
     You are a writer. You are writing a note. The note is about {title}. The note is about {gen 'type'}. 
-    The note has the following {content} a parameter to this function. The note was created on {date}. 
+    The note has the following {{content}} a parameter to this function. The note was created on {{current_date}}. 
     You must create a summary, cloassify the note by type, and choose from valid tags found to be within the vault already.
     Place it in the frontmatter in correct Markdown format to follow.
     {{~/system~}}
@@ -115,9 +111,28 @@ def _create_note(title: str, content: str) -> str:
     summary: {{gen 'summary'}}
     created: {{current_date}}
     type: {{gen 'type'}}
-    --- 
+    ---
     {{content}}
     ''')
+    executed_create_program = program( 
+        content = content,
+        valid_tags = _get_valid_tags(),
+        current_date = current_date
+    } 
+
+def _create_markdown_file(title: str, content: str) -> str: 
+    """ 
+    Creates a markdown file with the title and content inside of the vault. 
+
+    Parameters: 
+        - title: the title of the note to create 
+        - content: the content of the note to create(inlcluding frontmatter) 
+
+    Returns: 
+        - string representing the actions/operation success or failures. 
+    """ 
+
+    return ""
 
 def _create_note_flashcards(title: str) -> str | None:
     """
@@ -135,8 +150,7 @@ def _create_note_flashcards(title: str) -> str | None:
 
     create_flashcards = guidance('''
 
-    A conversation with an AI for use in Obsidian. \n 
-
+    A conversation with an AI for use in Obsidian.
     You are an AI that is helping write flashcards for the purpose of spaced repitition. 
     Flashcards should have the following format: 
     '<question>
@@ -145,10 +159,12 @@ def _create_note_flashcards(title: str) -> str | None:
 
     Here is an example flashcard:
     ${exampleFlashcard}
-    Do NOT number the flashcards. Make sure each question you as is atomic, so that it only asks one thing, i.e. avoids the use of 'and'. You do not need to write flashcards on everything in the document, just start with the most important. You will be a writing it on the subject matter of:'${title}.''')
+    Do NOT number the flashcards. Make sure each question you state is atomic, so that it only asks one thing, i.e. avoids the use of 'and'. You do not need to write flashcards on everything in the document, just start with the most important. You will be a writing it on the subject matter of:'${title}.
+
+    ''')
 
     # Create a list of flashcards from the user's input
-    executed_program = program( 
+    executed_program = program(
 
 
 
@@ -156,66 +172,10 @@ def _create_note_flashcards(title: str) -> str | None:
     vault_path = os.path.join(current_working_directory, "autogpt", "auto_gpt_workspace", git_url.split("/")[-1])
 
     // Get the document text 
-    documentText = await getDocumentText(documentPath);
-
-     // Remove the front matter
-    const cleanedText = removeFrontMatter(documentText);
-    // Surround the text with markdown
-    const markdownText = surroundWithMarkdown(cleanedText);
+    documentText = await _get_note_by_title(documentPath)
 
 
-def _sync_vault() -> str:
-    """
-    Sync the Obsidian Vault within the workspace with the remote Git repository.
-    If there is a vault in the workspace, then it syncs the vault with the remote 
-    Git repository. If not, then it clones the remote Git repository into the workspace.
 
-    Returns: 
-        - the result of the sync operation.
-    """
-    git_url = os.getenv("OBSIDIAN_VAULT_GIT_URL") 
-    git_api_key = os.getenv("OBSIDIAN-GITHUB_API_KEY")
-    git_username = os.getenv("OBSIDIAN-GITHUB_USERNAME")
+    return 
 
-    split_url = git_url.split("//")
-    auth_repo_url = f"//{git_username}:{git_api_key}@".join(split_url)
 
-    current_working_directory = os.getcwd() 
-    working_directory = os.path.join(current_working_directory, "autogpt", "auto_gpt_workspace", git_url.split("/")[-1])
-    
-    # if there is no vault in the workspace (checked usinging os.path.exists() with end of git url), then create one with git clone.
-    if not os.path.exists(working_directory):
-        try:
-            Repo.clone_from(auth_repo_url, os.path.join(current_working_directory, "autogpt", "auto_gpt_workspace"))
-            return f"""Cloned {git_url} to {working_directory}"""
-        except Exception as e: 
-            return f"""Error cloning {git_url} to {working_directory}: {e}"""
-    else:
-        # Create a repo object for the vault directory.
-        repo = git.Repo(working_directory)
-
-        def add_all_commit_push() -> Exception|None:
-            try:
-                repo.git.add(update=True) 
-                repo.git.commit("-m", "Auto-commit from AutoGPT") 
-                origin = repo.remote(name="origin")
-                origin.push() 
-                return
-            except Exception as e: 
-                return e
-
-        # There are changes in the remote repository, then pull the latest changes from the remote repository.
-        if repo.head.commit != origin.fetch()[0].commit: 
-            repo.git.pull() 
-            if not add_all_commit_push() as exception:
-                return f"""Exception while pushing changes to {git_url}: {exception}"""
-            else:
-                return f"""Pulled latest changes from {git_url} to {working_directory} and pushed changes"""  
-
-        # If there are changes in repo
-        if repo.is_dirty():
-            
-            if not add_all_commit_push() as exception:
-                return f"""Exception while pushing changes to {git_url}: {exception}"""
-            else:
-                return f"""Pushed changes to {git_url}"""

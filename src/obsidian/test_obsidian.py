@@ -6,9 +6,10 @@ import os
 """
 Import the obsidian module to access the obsidian plugin commands.
 """
-from obsidian import _create_note, _find_note_by_title
+from obsidian import _create_note, _find_note_by_title, _get_valid_tags
 
 
+-- TODO - Add tests for the following functions: _get_valid_tag, _create_note, _create_notes, and _find_note_by_title 
 def test_create_note() -> None:
     """
     Tests the creation of a note with `create_note()`. More specifically, this test creates a note that is titled "test_note" and has the content "This is a test note."
