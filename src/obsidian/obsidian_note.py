@@ -1,5 +1,8 @@
 """Import the OS module to operate using operating system of the operating computer."""
 import os
+from obsidian.obsidian_frontmatter import Frontmatter
+
+from obsidian.obsidian_vault import Obsidian_Vault
 
 class Obsidian_Note():
     """
@@ -7,21 +10,24 @@ class Obsidian_Note():
     Attributes:  | Description:
     Note Title - the title of the file/note defined by the path of the note/file. Additively, the title of the note without the file extension aka `.md`.
     Note Content - the entire content of the file/note including the frontmatter. 
+    Note Body - the content of the note without the frontmatter.
     Note Frontmatter - the content of an Obsidian Note inside of "---"s at the front of a note or defined with dataview syntax
     Note Meta data - the metadata fields and their corresponding values of the note/file 
     """
-    def __init__(self, note_path: str) -> None: 
+    def __init__(self, vault: Obsidian_Vault, note_path) -> None: 
         """
         Initialize the Obsidian_Note object with the given parameters.
 
         Args:
-            path: The path of the note with respect to the vault_working_directory. 
+            path: The path of the note with respect to the vault_working_directory. (Not including the vault_directory)
         """
-        self.vault_name = os.getenv("OBSIDIAN_VAULT_NAME")
-        vault_working_directory = os.path.join("", "autogpt", "auto_gpt_workspace", self.vault_name)
-        self.path = os.path.join(vault_working_directory, note_path)
+        self.vault_name = os.getenv("OBSIDIAN_VAULT_NAME") 
+        self.vault = vault
+        self.path = vault.vault_directory + note_path
+        self.title = os.path.basename(self.path).replace(".md", "")  
+        self.frontmatter: Frontmatter
         self.content = None
-
+        self.body = None
         self.update_note_attributes(self.content)
 
     def format_frontmatter(self) -> str:

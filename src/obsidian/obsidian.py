@@ -1,29 +1,31 @@
-"""
-Import the `os` module to access the environment variables from the `.env` file.
-"""
+""" Import the `os` module to access the environment variables from the `.env` file. """
 import os
-from obsidian_note import Obsidian_Note
-from obsidian_vault import Obsidian_Vault
 
-"""
-Import the `guidance` module to access microsoft guidance's python libraries allowing for more ways to inference language models.
-"""
+""" Obsidian uses vaults, notes,  content, frontmatters, and body to store information. """
+from obsidian.obsidian_vault import Obsidian_Vault
+from obsidian.obsidian_note import Obsidian_Note
+from obsidian.obsidian_vault import Obsidian_Vault
+
+""" Guidance Module for more ways to inference language models. """
 import guidance
 
-"""
-Import the datetime module for accurate date and time
-"""
+""" Import the datetime module for accurate date and time. """
 import datetime 
 
 class Obsidian:
-
-    def __init__(self, vault_name: str):
+    """
+    Python Wrapper-like application interface for autogpt for Obsidian.md. 
+    """
+    def __init__(self):
         """Initializes an Obsidian object with a vault."""
-        self.vault = vault
+        self.vault = Obsidian_Vault()
+        # When running in a docker container, the vault path is different than when running locally on a machine
+        # , but this implementation allows for docker only because of `~` being used in the path.`
+        self.vault_path = os.path.join( 
+            os.path.expanduser("~"),  
+            f"autogpt{os.sep}auto_gpt_workspace{os.sep}{self.vault.vault_name}" 
+        )
 
-    """
-    Obsidian Integrations for Auto-GPT using custom API functions and obsidiantools.
-    """
     def _get_valid_tags(self) -> list: 
         """ 
         Retrieves a list of valid tags from the vault. 
@@ -124,7 +126,7 @@ class Obsidian:
             content = content,
             valid_tags = _get_valid_tags(),
             current_date = current_date
-        } 
+        ) 
 
     def _create_markdown_file(title: str, content: str) -> str: 
         """ 
@@ -140,6 +142,21 @@ class Obsidian:
 
         return ""
 
+    def _sync_vault(self) -> str: 
+        """ 
+        Syncs the vault with the remote repository. 
+
+        Returns: 
+            - string representing the actions/operation success or failures. 
+        """ 
+        try:
+            vault.sync()
+            return "Vault synced successfully." 
+        except Exception as e:
+            return "Vault failed to sync because of the following error: " + str(e)
+
+
+
     def _create_note_flashcards(title: str) -> str | None:
         """
         Create a note containing spaced-repetition styled flashcards 
@@ -148,11 +165,11 @@ class Obsidian:
         + "Flashcards" + number of flashcards for that note in the vault 
         that were found to be in the vault to avoid name collisions.
         """
-        
         _sync_vault()
         
         # Set guidance's OpenAI Model to "text-davinci-003"
         guidance.llm = guidance.llms.OpenAI("text-davinci-003")
+
 
         create_flashcards = guidance('''
 
@@ -169,7 +186,8 @@ class Obsidian:
 
         ''')
         # Create a list of flashcards from the user's input
-        executed_program = program(
+        executed_flashcards_program = program(
+            content = 
 
 
 

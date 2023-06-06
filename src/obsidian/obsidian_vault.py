@@ -8,8 +8,6 @@ import os
 """Provides Git Operations for the Obsidian Vault Object"""
 from git.repo import Repo
 
-
-
 class Obsidian_Vault: 
     """
     Vault Object allowing for interactions with markdown notes specifically with the syntax 
@@ -30,6 +28,7 @@ class Obsidian_Vault:
         self.sync_vault()
         self.path = None
         self.tags = None  
+        self.vault_directory = os.sep.join([ os.path.expanduser("~"), "autogpt", "auto_gpt_workspace", self.vault_name ])
 
         
     def init_env_vars(self) -> None:
@@ -54,6 +53,7 @@ class Obsidian_Vault:
             # Initialize the Vault Object with the name of the vault. 
             self.vault_name = os.getenv("OBSIDIAN_VAULT_NAME") 
         else:
+            self.vault_name = "autogpt-vault-unspecified vault name"
             assert False, "Please set the OBSIDIAN_VAULT_NAME environment variable in the .env file."
 
         if os.getenv("OBSIDIAN_GITHUB_API_KEY"): 
@@ -84,6 +84,7 @@ class Obsidian_Vault:
         # For each file with a `.md` extension  as target:
         # for ob_note in self.markdown_content: 
         # List result = 
+        for note in content:
 
     def sync_vault(self) -> bool: 
         """ 
@@ -97,11 +98,10 @@ class Obsidian_Vault:
         git_url = os.getenv("OBSIDIAN_VAULT_GIT_URL") 
         git_api_key = os.getenv("OBSIDIAN-GITHUB_API_KEY")
         git_username = os.getenv("OBSIDIAN-GITHUB_USERNAME")
-
         split_url = git_url.split("//")
         auth_repo_url = f"//{git_username}:{git_api_key}@".join(split_url)
         # Create a repo object for the vault directory.
-        repo = git.Repo(working_directory)
+        repo = Repo(self.vault_directory))
 
         def add_all_commit_push() ->bool:
             try:
