@@ -3,36 +3,28 @@ Import the `os` module to access the environment variables from the `.env` file.
 """
 import os
 
-"""
-Import the obsidian module to access the obsidian plugin commands.
-"""
-from obsidian import _create_note, _find_note_by_title, _get_valid_tags
+from git.repo import Repo
+import pytest
+import unittest
 
-
--- TODO - Add tests for the following functions: _get_valid_tag, _create_note, _create_notes, and _find_note_by_title 
-def test_create_note() -> None:
-    """
-    Tests the creation of a note with `create_note()`. More specifically, this test creates a note that is titled "test_note" and has the content "This is a test note."
-    Additionally, this test checks that the note is created.
-    """
-    # Set the vault path with the environment variable from the `.env` file.
-    vault_path = os.getenv("OBSIDIAN_VAULT_PATH")
-    # Attempt note creation with `create_note()` with the title "test_note" and the content "This is a test note."
-    response = _create_note(title="test_note", content="This is a test note.",)
-    with _find_note_by_title(title="test_note") as file:
-        # Check that the note was created.
-        assert file.read() == response
-        file.close()
-        os.remove(f"{vault_path}{os.sep}test_note.md")
-
-
-def test_sync_empty() -> None:
+def ObsidianVaultTest(unittest.TestCase): 
     """ 
-    Tests the sync function of the obsidian plugin with an empty vault.
+    Testing Class for obsidian_vault.py
     """
-    working_directory = os.path.join(
-        current_working_directory,
-        "autogpt",
-        "auto_gpt_workspace",
-        git_url.split("/")[-1],
-    )
+    def test_construction_empty(self):  
+        # Constructing a Vault using public empty vault example should have 0 items as cotnents
+        empty_vault_url = "https://github.com/conneroisu/Empty-Obsidian-Vault-AutoGPT"   
+        empty_vault = ObsidianVault(empty_vault_url)         
+
+    def test_clone_empty(self):
+        # Constructing a Vault using public empty vault example should have 0 items as cotnents
+        empty_vault_url = "https://github.com/conneroisu/Empty-Obsidian-Vault-AutoGPT"
+
+        # The vault should be cloned into the workspace of autoGPT 
+        empty_vault = ObsidianVault(empty_vault_url)
+        #
+        # Assert that the vault is cloned into the workspace as Empty-Obsidian-Vault-AutoGPT
+        assert os.path.exists("Empty-Obsidian-Vault-AutoGPT")
+    def arbitrary_test(self): 
+        assert 1==1
+

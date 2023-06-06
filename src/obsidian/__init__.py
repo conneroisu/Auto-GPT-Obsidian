@@ -1,13 +1,19 @@
-"""Obsidian Integrations for Auto-GPT using obsidiantools."""
+"""Obsidian Integrations for Auto-GPT using custom structures."""
+
+"""Import the operating system module"""
 import os
+
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, TypedDict
 
-from .obsidian import _create_note
+from obsidian.obsidian_vault import Obsidian_Vault
 
+"""Import functions frrom the obsidian plugin"""
+from obsidian import _create_note
+
+"""Import the auto_gpt_plugin_template module for interactions with the autogpt plugin interfaces"""
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
 
 PromptGenerator = TypeVar("PromptGenerator")
-
 
 class Message(TypedDict):
     role: str
@@ -25,6 +31,8 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
         self._version = "0.1.0"
         self._description = "Obsidian Integrations for Auto-GPT using obsidiantools."
         self.vault_path = os.getenv("OBSIDIAN_VAULT_PATH")
+        self.vault = Obsidian_Vault(self.vault_path) 
+
         if self.vault_path is None:
             print(
                 "WARNING: The OBSIDIAN_VAULT_PATH environment variable is not set. Please set it to the path of the Obsidian vault wished to be interacted with."

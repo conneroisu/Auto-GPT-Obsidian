@@ -92,16 +92,17 @@ ALLOWLISTED_PLUGINS=AutoGPTObsidian
 ### Obsidian
 ################################################################################
 
+## OBSIDIAN_VAULT_NAME - the name of the obsidian vault
 ## OBSIDIAN_VAULT_GIT_URL - the repository url (without .git) of the vault.
 ## OBSIDIAN_FLASHCARD_SUBDIRECTORY - the subdirectory in which to create flashcards with spaced repition format/syntax.
 ## OBSIDIAN_GITHUB_API_KEY - the API KEY to which responsibilities inside of the github repository ahave been allowed
 ## OBSIDIAN_GITHUB_USERNAME - the username of the account housing the github repository and key. 
 
+OBSIDIAN_VAULT_NAME=Auto-GPT-Obsidian-Example-Vault
 OBSIDIAN_VAULT_GIT_URL=https://github.com/conneroisu/Auto-GPT-Obsidian-Example-Vault
 OBSIDIAN_FLASHCARD_SUBDIRECTORY=/internal/vault/path/
-OBSIDIAN_GITHUB_API_KEY=<github api key/token>
-OBSIDIAN_GITHUB_USERNAME=<github username>
-
+OBSIDIAN_GITHUB_API_KEY=<github_api_key/token>
+OBSIDIAN_GITHUB_USERNAME=<github_username>
 ```
 
 Run Auto-GPT and enjoy integrations of Auto-GPT with Obsidian!
