@@ -2,7 +2,6 @@
 import os
 import frontmatter 
 
-
 from obsidian.obsidian_vault import Obsidian_Vault
 
 class Obsidian_Note():
