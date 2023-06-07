@@ -15,6 +15,7 @@ def ObsidianVaultTest(unittest.TestCase):
         # Constructing a Vault using public empty vault example should have 0 items as cotnents
         empty_vault_url = "https://github.com/conneroisu/Empty-Obsidian-Vault-AutoGPT"   
         empty_vault = ObsidianVault(empty_vault_url)         
+        assert len(empty_vault.contents) == 0
 
     def test_clone_empty(self):
         # Constructing a Vault using public empty vault example should have 0 items as cotnents

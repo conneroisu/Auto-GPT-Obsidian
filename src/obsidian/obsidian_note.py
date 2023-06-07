@@ -1,6 +1,7 @@
 """Import the OS module to operate using operating system of the operating computer."""
 import os
-from obsidian.obsidian_frontmatter import Frontmatter
+import frontmatter 
+
 
 from obsidian.obsidian_vault import Obsidian_Vault
 
@@ -8,10 +9,10 @@ class Obsidian_Note():
     """
     Note object allowing for inteactions with markdown notes with the syntax of Obsidian for the AutoGPT plugin, AutoGPTObsidian.
     Attributes:  | Description:
-    Note Title - the title of the file/note defined by the path of the note/file. Additively, the title of the note without the file extension aka `.md`.
+    Note Title - the title of the file/note defined by the path of the note/file. 
     Note Content - the entire content of the file/note including the frontmatter. 
     Note Body - the content of the note without the frontmatter.
-    Note Frontmatter - the content of an Obsidian Note inside of "---"s at the front of a note or defined with dataview syntax
+    Note Frontmatter - the content of an Obsidian Note inside of "---"s at the front of a note 
     Note Meta data - the metadata fields and their corresponding values of the note/file 
     """
     def __init__(self, vault: Obsidian_Vault, note_path) -> None: 
@@ -25,24 +26,11 @@ class Obsidian_Note():
         self.vault = vault
         self.path = vault.vault_directory + note_path
         self.title = os.path.basename(self.path).replace(".md", "")  
-        self.frontmatter: Frontmatter
-        self.content = None
-        self.body = None
-        self.update_note_attributes(self.content)
 
-#    def format_frontmatter(self) -> str:
-        """ 
-        Formats the frontmatter of the note to be in a standard format as chosen by AutoGPTObsidian.
-        --- 
-        tags: [tag1, tag2, tag3]
-        aliases: [alias1, alias2, alias3]
-        summary: [summary]
-        ---
-
-        """
-#        self.reload()
+        with open(os.path.join(vault.vault_directory, note_path))as f:
+            self.frontmatter = frontmatter.load(f)
+            self.update_note_attributes(f.read())
         
-
 
     def reload(self) -> None: 
         """
@@ -59,15 +47,10 @@ class Obsidian_Note():
         Updates the attributes of the Obsidian_Note object based on the content of the note give as context, a string.
         Updates the following attributes: tags, incoming_links, outgoing_links, frontmatter, dataview_metadata, and dataview_metadata_fields 
         """
-        ######FRONTMATTER###### 
         self.frontmatter = self.get_frontmatter(context)
-        ######TAGS######
-        # Get the tags of the note
         self.tags = self.get_tags(context)
-        ######CONTENT######
         with open(self.path, "r") as file: 
             self.content = file.read()
-
 
     def get_tags(self, content) -> list: 
         """
@@ -94,37 +77,6 @@ class Obsidian_Note():
 
 
         return tags
-
-    def get_frontmatter(self, context: str) -> dict|None:
-        """
-        Retreives the frontmatter metadata the defined in the frontmatter of the note.
-
-        Returns:
-            A frontmatter object for the note containing the metadata values of the note.
-        """
-        for line in self.content:
-            if line.startswith("---") and line.endswith("\n"):
-                beginning_line = line
-                for sline in self.content:
-                    if (
-                        sline.startswith("---")
-                        and sline.endswith("\n")
-                        and sline != beginning_line
-                    ):
-                        end_line = sline
-        # Now that we have the beginning and end of the frontmatter, we can check if the value is in the frontmatter.
-        inside = False
-        for line in content:
-            if line == beginning_line:
-                inside = True
-            if line == end_line:
-                inside = False
-            if inside:
-                # for each value in the frontmatter set frontmatter.value to said value.
-                for char in line:
-                    value = line.split(":")[0]
-                    data = line.split(":")[1]
-        return self.frontmatter
 
 
     def run_core_template(self):

@@ -2,10 +2,8 @@ from typing import TYPE_CHECKING, List
 
 from obsidian.obsidian_note import Obsidian_Note
 
-"""Used to operate using operating system of the operating computer."""
 import os
 
-"""Provides Git Operations for the Obsidian Vault Object"""
 from git.repo import Repo
 
 class Obsidian_Vault: 
@@ -24,14 +22,15 @@ class Obsidian_Vault:
     def __init__(self) -> None:
         """Initializes the Obsidian Vault Object."""
         # Retreive the env vars fo the obsidian plugin
-        self.init_env_vars()
+        self.initialize_environment_variables()
         self.sync_vault()
         self.path = None
         self.tags = None  
         self.vault_directory = os.sep.join([ os.path.expanduser("~"), "autogpt", "auto_gpt_workspace", self.vault_name ])
 
         
-    def init_env_vars(self) -> None:
+    def initialize_environment_variables(self) -> None:
+        """Initializes the environment variables for the Obsidian Plugin."""
         if os.getenv("OBSIDIAN_GITHUB_API_KEY"):
             self.git_api_key = os.getenv("OBSIDIAN_GITHUB_API_KEY")
         else: 
@@ -51,7 +50,7 @@ class Obsidian_Vault:
 
         if os.getenv("OBSIDIAN_VAULT_NAME"): 
             # Initialize the Vault Object with the name of the vault. 
-            self.vault_name = os.getenv("OBSIDIAN_VAULT_NAME") 
+            self.vault_name = str(os.getenv("OBSIDIAN_VAULT_NAME"))
         else:
             self.vault_name = "autogpt-vault-unspecified vault name"
             assert False, "Please set the OBSIDIAN_VAULT_NAME environment variable in the .env file."
@@ -73,7 +72,7 @@ class Obsidian_Vault:
         except Exception as e: 
             return f"Error: {str(e)}"
 
-    def search_vault_title(self, title: str):
+    def search_vault_title(self, title: str) -> Obsidian_Note|None:
         """ 
         Searches the Obsidian Vault for a note with a given title.
         
@@ -84,7 +83,11 @@ class Obsidian_Vault:
         # For each file with a `.md` extension  as target:
         # for ob_note in self.markdown_content: 
         # List result = 
-        for note in content:
+        for note in self.content:
+            if note.title == title: 
+                return note
+
+        return None
 
     def sync_vault(self) -> bool: 
         """ 

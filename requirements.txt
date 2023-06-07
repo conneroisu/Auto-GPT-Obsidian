@@ -1,5 +1,5 @@
 black
-obsidiantools~=0.10.0
+python-frontmatter
 isort
 flake8
 pylint
