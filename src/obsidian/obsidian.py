@@ -15,9 +15,17 @@ import datetime
 class Obsidian:
     """
     Python Wrapper-like application interface for autogpt for Obsidian.md. 
+    ```txt
+    One Vault -------------------------------------------------------------------------------------------------> Obsidian_Vault Object
+    |_> One Note ----------------------------------------------------------> Obsidian_Note Object               |_> contents - a splay tree of Obsidian_Note objects
+        |_> One Frontmatter ---> Obsidian_Frontmatter                        |_> title - string of title
+        |_> One Body             |_> content - string of frontmatter content |_> file_path - file path of note
+            |_> str(!Frontmatter)                                            |_> tags - list of tags
+    ```
+
     """
     def __init__(self):
-        """Initializes an Obsidian object with a vault."""
+        """Initializes an Obsidian object with the configured remote vault."""
         self.vault = Obsidian_Vault()
         # When running in a docker container, the vault path is different than when running locally on a machine
         # , but this implementation allows for docker only because of `~` being used in the path.`
