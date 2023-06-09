@@ -25,7 +25,6 @@ class Obsidian_Note():
         self.vault = vault
         self.path = vault.vault_directory + note_path
         self.title = os.path.basename(self.path).replace(".md", "")  
-
         with open(os.path.join(vault.vault_directory, note_path))as f:
             self.frontmatter = frontmatter.load(f)
             self.update_note_attributes(f.read())
@@ -46,7 +45,6 @@ class Obsidian_Note():
         Updates the attributes of the Obsidian_Note object based on the content of the note give as context, a string.
         Updates the following attributes: tags, incoming_links, outgoing_links, frontmatter, dataview_metadata, and dataview_metadata_fields 
         """
-        self.frontmatter = self.get_frontmatter(context)
         self.tags = self.get_tags(context)
         with open(self.path, "r") as file: 
             self.content = file.read()
@@ -58,26 +56,17 @@ class Obsidian_Note():
         Returns: 
             A list of tags for the note. 
         """
-        tags = []
         ### FRONTMATTER ###
-        for line in self.frontmatter.split("\n"): 
-            if line.startswith("tags:"): 
-                tags = line.replace("tags:", "").strip().split(" ")
+        tags = []
         ### CONTENT ###
         for line in content.split("\n"): 
             # split around spaces
             for word in line.split(" "): 
                 if word.startswith("#"): 
-                    tags.append(word) 
+                    tags.append(word.replace("#", ""))
         ### DATAVIEW ### 
         for line in content.split("\n"): 
             if line.startswith("tags::"): 
                 tags += line.replace("tags::", "").strip().split(" ")
-
-
         return tags
 
-
-    def run_core_template(self):
-        # TODO: Run the core template.
-        pass

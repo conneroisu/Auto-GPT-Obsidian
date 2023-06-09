@@ -30,8 +30,7 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
         self._name = "autogpt-obsidian"
         self._version = "0.1.0"
         self._description = "Obsidian Integrations for Auto-GPT using obsidiantools."
-        self.vault_path = os.getenv("OBSIDIAN_VAULT_PATH")
-        self.vault = Obsidian_Vault(self.vault_path) 
+        self.vault = Obsidian_Vault() 
 
         if self.vault_path is None:
             print(

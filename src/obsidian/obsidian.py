@@ -2,9 +2,9 @@
 import os
 
 """ Obsidian uses vaults, notes,  content, frontmatters, and body to store information. """
-from obsidian.obsidian_vault import Obsidian_Vault
-from obsidian.obsidian_note import Obsidian_Note
-from obsidian.obsidian_vault import Obsidian_Vault
+from obsidian_vault import Obsidian_Vault
+from obsidian_note import Obsidian_Note
+from obsidian_vault import Obsidian_Vault
 
 """ Guidance Module for more ways to inference language models. """
 import guidance
@@ -26,44 +26,14 @@ class Obsidian:
             f"autogpt{os.sep}auto_gpt_workspace{os.sep}{self.vault.vault_name}" 
         )
 
-    def _get_valid_tags(self) -> list: 
-        """ 
-        Retrieves a list of valid tags from the vault. 
 
-        Returns: a list of valid tags used within the vault.
-        """ 
-        # Set guidance's OpenAI Model to "text-davinci-003"
-        guidance.llm = guidance.llms.OpenAI("text-davinci-003")
+    def _find_note_by_title(self, title: str) -> Obsidian_Note|None:
+        for note in self.vault.content:
+            if title == note.title: 
+                return note
+        return None
 
-        # Sync the vault to most recent changes
-        _sync_vault()
-        vault_path = os.path.join(current_working_directory, "autogpt", "auto_gpt_workspace", git_url.split("/")[-1])
-
-        # Create a list of valid tags from the vault
-        valid_tags = []
-
-        # Iterate through the vault to find all tags
-        for root, dirs, files in os.walk(vault_path):
-            for file in files:
-                if file.endswith(".md"):
-                    with open(os.path.join(root, file), "r") as f:
-                        for line in f.readlines():
-                            if line.startswith("tags:"):
-                                for tag in line.split(":")[1].split(","):
-                                    valid_tags.append(tag.strip())
-        # Additionally, Obsidian allows for tags to be defined as #tags, so we will add those to the list of valid tags. 
-        for root, dirs, files in os.walk(vault_path):
-            for file in files:
-                if file.endswith(".md"):
-                    with open(os.path.join(root, file), "r") as f:
-                        for line in f.readlines():
-                            for word in line.split(" "):
-                                if word.startswith("#"):
-                                    valid_tags.append(word.strip())
-
-        return valid_tags
-
-    def _create_note(title: str, content: str) -> str:
+    def _create_note(self, title: str, content: str) -> Exception|None:
         """
         Create a note inside the vault with a title, content, tags, type,  and a summary within the frontmatter of said note following the Obsidian format
         Parameters:
@@ -75,23 +45,25 @@ class Obsidian:
 
         """
         # Sync the vault to most recent changes
-
-        _sync_vault()
+        self.vault.sync_vault()
         
         # Set guidance's OpenAI Model to "text-davinci-003"
         guidance.llm = guidance.llms.OpenAI("text-davinci-003")
 
-        vault_path = os.path.join(current_working_directory, "autogpt", "auto_gpt_workspace", git_url.split("/")[-1])
+        #geneal path ~/
+        vault_path = os.path.join(f"{os.path.expanduser("
+        var = ~")}{os.sep}current_working_directory{os.sep}autogpt{os.sep}auto_gpt_workspace", \
+        self.vault.git_url.split("/")[-1]
+        )
 
         ## Handle Collisions  
-        ## TODO Need to finish the Collisions Code here to 
-        note = _find_note_by_title(title) 
-        if not note is None: 
-            # Handle Collision
-            HandleCollision(note, title, content)
-            
-            
-        
+        note = self._find_note_by_title(title)
+        if note is not None:
+            if note.content is not None:
+                if note.title == title:
+                    return  Exception("Note with title " + title + " exists in the vault.")
+        note = self._find_note_by_title(title) 
+
         if title.endswith(".md"): 
             title = title[:-3]
             title = title + ".md"
@@ -99,20 +71,23 @@ class Obsidian:
         # Create a new note with the title and content
         note = open(os.path.join(vault_path, title), "w") 
 
-
         current_date = datetime.datetime.now()
         # Create a valid tags list file in the workspace
         valid_tags_file = open(os.path.join(current_working_directory, "valid_tags.txt"), "w")
 
-        valid_tags  = [_get_valid_tags()]
+        generated_tags = self._generate_tags(content)
+
+
+        valid_tags  = [self.vault.valid_tags, generated_tags]
 
         create_note_program = guidance('''
-        {{#system~}}
-        You are a writer. You are writing a note. The note is about {title}. The note is about {gen 'type'}. 
-        The note has the following {{content}} a parameter to this function. The note was created on {{current_date}}. 
-        You must create a summary, cloassify the note by type, and choose from valid tags found to be within the vault already.
-        Place it in the frontmatter in correct Markdown format to follow.
-        {{~/system~}}
+           {{#system~}}
+           You are a writer. You are writing a note. The note is about {title}. The note is about {gen 'type'}. 
+           The note has the following {{content}} a parameter to this function. The current_date is {{current_date}}. 
+           The note is in the vault {{vault_path}}. 
+           You must create a summary, cloassify the note by type, and choose from valid tags found to be within the vault already.
+           Place it in the frontmatter in correct Markdown format to follow.
+           {{~/system~}}
         ---
         title: {{title}}
         tags: {{#select 'tags' options = valid_tags}}  
@@ -124,9 +99,10 @@ class Obsidian:
         ''')
         executed_create_program = program( 
             content = content,
-            valid_tags = _get_valid_tags(),
+            valid_tags = valid_tags,
             current_date = current_date
-        ) 
+            vault_path = self.vault.path
+        )
 
     def _create_markdown_file(title: str, content: str) -> str: 
         """ 
@@ -150,14 +126,14 @@ class Obsidian:
             - string representing the actions/operation success or failures. 
         """ 
         try:
-            vault.sync()
+            self.vault.sync_vault()
             return "Vault synced successfully." 
         except Exception as e:
             return "Vault failed to sync because of the following error: " + str(e)
 
 
 
-    def _create_note_flashcards(title: str) -> str | None:
+    def _create_note_flashcards(self, title: str) -> Exception | None:
         """
         Create a note containing spaced-repetition styled flashcards 
         inside the vault with a title, content, tags, and a summary.
@@ -165,14 +141,27 @@ class Obsidian:
         + "Flashcards" + number of flashcards for that note in the vault 
         that were found to be in the vault to avoid name collisions.
         """
-        _sync_vault()
+        self._sync_vault()
+
+        if title is None:
+            return Exception("Title cannot be None.")
+
+        note = self._find_note_by_title(title)
+        if note is not None:
+            if note.content is not None:
+                return  Exception("Note with title " + title + " exists in the vault.")
+         
+
+        # Get a summary of the note's content
         
+
+        # Get the note's content
+
+        # Get the 
         # Set guidance's OpenAI Model to "text-davinci-003"
         guidance.llm = guidance.llms.OpenAI("text-davinci-003")
 
-
-        create_flashcards = guidance('''
-
+        create_flashcards_program = guidance('''
         A conversation with an AI for use in Obsidian.
         You are an AI that is helping write flashcards for the purpose of spaced repitition. 
         Flashcards should have the following format: 
@@ -187,18 +176,19 @@ class Obsidian:
         ''')
         # Create a list of flashcards from the user's input
         executed_flashcards_program = program(
-            content = 
-
-
-
+            content = note.content, 
+            title = note.title,
+            example_flashcards=""
         )
-        vault_path = os.path.join(current_working_directory, "autogpt", "auto_gpt_workspace", git_url.split("/")[-1])
 
-        // Get the document text 
-        documentText = await _get_note_by_title(documentPath)
+        self._create_note(title, executed_flashcards_program)
+
+        documentText = _get_note_by_title(documentPath)
 
 
 
         return 
 
 
+    def _the_one_where_we(self): 
+        pass
