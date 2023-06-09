@@ -31,45 +31,51 @@ class Obsidian_Vault:
         self.content = self.get_vault_content()
 
         
-    def initialize_environment_variables(self) -> None:
+    def initialize_environment_variables(self) -> Exception|None:
         """Initializes the environment variables for the Obsidian Plugin."""
         if os.getenv("OBSIDIAN_GITHUB_API_KEY"):
             self.git_api_key = os.getenv("OBSIDIAN_GITHUB_API_KEY")
         else: 
-            assert False, "Please set the OBSIDIAN_GITHUB_API_KEY environment variable in the .env file."
+            return Exception("Please set the OBSIDIAN_GITHUB_API_KEY environment variable in the .env file.")
+            # False, "Please set the OBSIDIAN_GITHUB_API_KEY environment variable in the .env file."
 
         if os.getenv("OBSIDIAN_VAULT_GIT_URL"):
-            # Initialize the Vault Object with the a Git URL used to house the vault.
             self.git_url = os.getenv("OBSIDIAN_VAULT_GIT_URL") 
         else: 
-            self.git_url = ""
-            assert False, "Please set the OBSIDIAN_VAULT_GIT_URL environment variable in the .env file." 
+            return Exception("Please set the OBSIDIAN_VAULT_GIT_URL environment variable in the .env file.")
 
         if os.getenv("OBSIDIAN_GITHUB_USERNAME"):
             # Initialize the Vault Object with the Git Username used by the repository owner to house the vault. 
             self.git_username = os.getenv("OBSIDIAN_GIT_USERNAME")
         else: 
-            assert False, "Please set the OBSIDIAN_GIT_USERNAME environment variable in the .env file." 
+            return Exception("Please set the OBSIDIAN_GIT_USERNAME environment variable in the .env file.")
 
         if os.getenv("OBSIDIAN_VAULT_NAME"): 
             # Initialize the Vault Object with the name of the vault. 
             self.vault_name = str(os.getenv("OBSIDIAN_VAULT_NAME"))
         else:
-            self.vault_name = "autogpt-vault-unspecified vault name"
-            assert False, "Please set the OBSIDIAN_VAULT_NAME environment variable in the .env file."
+            return Exception("Please set the OBSIDIAN_VAULT_NAME environment variable in the .env file.")
 
         if os.getenv("OBSIDIAN_VAULT_PATH"): 
             # Initialize the Vault Object with the path of the vault. 
             self.vault_path = str(os.getenv("OBSIDIAN_VAULT_PATH")) 
         else:
-            self.vault_path = ""
-            assert False, "Please set the OBSIDIAN_VAULT_PATH environment variable in the .env file."
+            return Exception("Please set the OBSIDIAN_VAULT_PATH environment variable in the .env file.")
 
         if os.getenv("OBSIDIAN_GITHUB_API_KEY"): 
             # Initialize the Vault Object with the Git API Key used to house the vault.
             self.git_api_key = os.getenv("OBSIDIAN_GITHUB_API_KEY")
         else: 
-            assert False, "Please set the OBSIDIAN_GITHUB_API_KEY environment variable in the .env file."
+            return Exception("Please set the OBSIDIAN_GITHUB_API_KEY environment variable in the .env file.")
+
+        if os.getenv("OBSIDIAN_FLASHCARD_DIRECTORY"): 
+            # Initialize the Vault Object with the Git API Key used to house the vault.
+            self.flashcard_directory = os.getenv("OBSIDIAN_FLASHCARD_DIRECTORY")
+            return None
+        else: 
+            return Exception("Please set the OBSIDIAN_FLASHCARD_DIRECTORY environment variable in the .env file.")
+
+
 
 
     def clone_vault(self) -> Exception|None:

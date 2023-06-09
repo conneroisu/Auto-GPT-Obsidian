@@ -51,10 +51,10 @@ class Obsidian:
         guidance.llm = guidance.llms.OpenAI("text-davinci-003")
 
         #geneal path ~/
-        vault_path = os.path.join(f"{os.path.expanduser("
-        var = ~")}{os.sep}current_working_directory{os.sep}autogpt{os.sep}auto_gpt_workspace", \
+        if self.vault.git_url is None:
+            return Exception("Vault is not a git repository. Please make sure that the vault is a git repository.")
+
         self.vault.git_url.split("/")[-1]
-        )
 
         ## Handle Collisions  
         note = self._find_note_by_title(title)
@@ -69,16 +69,16 @@ class Obsidian:
             title = title + ".md"
 
         # Create a new note with the title and content
-        note = open(os.path.join(vault_path, title), "w") 
+        note = open(os.path.join(self.vault.vault_path, title), "w") 
 
         current_date = datetime.datetime.now()
         # Create a valid tags list file in the workspace
         valid_tags_file = open(os.path.join(current_working_directory, "valid_tags.txt"), "w")
 
-        generated_tags = self._generate_tags(content)
+        # generated_tags = self._generate_tags(content)
 
 
-        valid_tags  = [self.vault.valid_tags, generated_tags]
+        # valid_tags  = [self.vault.valid_tags, generated_tags]
 
         create_note_program = guidance('''
            {{#system~}}
@@ -99,7 +99,7 @@ class Obsidian:
         ''')
         executed_create_program = program( 
             content = content,
-            valid_tags = valid_tags,
+            valid_tags = self.vault.get_valid_tags(),
             current_date = current_date
             vault_path = self.vault.path
         )
@@ -161,6 +161,7 @@ class Obsidian:
         # Set guidance's OpenAI Model to "text-davinci-003"
         guidance.llm = guidance.llms.OpenAI("text-davinci-003")
 
+
         create_flashcards_program = guidance('''
         A conversation with an AI for use in Obsidian.
         You are an AI that is helping write flashcards for the purpose of spaced repitition. 
@@ -175,7 +176,7 @@ class Obsidian:
 
         ''')
         # Create a list of flashcards from the user's input
-        executed_flashcards_program = program(
+        executed_flashcards_program = guidance.program(
             content = note.content, 
             title = note.title,
             example_flashcards=""
