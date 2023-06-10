@@ -1,9 +1,10 @@
-"""This is a template for Auto-GPT plugins."""
+""" This is a plugin for AutoGPT for interfacing with a directory of markdown files like the app Obsidian MD. """
 import abc
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, TypedDict
 
 from abstract_singleton import AbstractSingleton, Singleton
-from obsidian import Obsidian_Vault
+from obsidian_vault import Obsidian_Vault
+from obsidian import _create_note, _sync_vault
 
 PromptGenerator = TypeVar("PromptGenerator")
 
@@ -14,16 +15,13 @@ class Message(TypedDict):
 
 
 class AutoGPTObsidian(AbstractSingleton, metaclass=Singleton):
-    """
-    This is a template for Auto-GPT plugins.
-    """
-
+    """ This is a plugin for AutoGPT for interfacing with a directory of markdown files like the app Obsidian MD. """
     def __init__(self):
         super().__init__()
         self._name = "autogpt-obsidian"
         self._version = "0.1.0"
         self._description = "Obsidian Integrations for Auto-GPT using obsidiantools."
-        self.vault = Obsidian_Vault()
+        self.vault = Obsidian_Vault() 
 
     @abc.abstractmethod
     def can_handle_on_response(self) -> bool:
@@ -47,7 +45,20 @@ class AutoGPTObsidian(AbstractSingleton, metaclass=Singleton):
         Returns:
             bool: True if the plugin can handle the post_prompt method."""
 
+        return True
 
+    @abc.abstractmethod
+    def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
+        """This method is called just after the generate_prompt is called,
+            but actually before the prompt is generated.
+
+        Args:
+            prompt (PromptGenerator): The prompt generator.
+
+        Returns:
+            PromptGenerator: The prompt generator.
+        """
+        
         prompt.add_command(
             "obsidian_create_note",
             "Create a new Obsidian note in the vault with a given title and content.",
@@ -63,20 +74,8 @@ class AutoGPTObsidian(AbstractSingleton, metaclass=Singleton):
             {},
             _sync_vault
         )
-        return True
 
-    @abc.abstractmethod
-    def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
-        """This method is called just after the generate_prompt is called,
-            but actually before the prompt is generated.
-
-        Args:
-            prompt (PromptGenerator): The prompt generator.
-
-        Returns:
-            PromptGenerator: The prompt generator.
-        """
-        pass
+        return prompt
 
     @abc.abstractmethod
     def can_handle_on_planning(self) -> bool:
@@ -97,6 +96,7 @@ class AutoGPTObsidian(AbstractSingleton, metaclass=Singleton):
             prompt (PromptGenerator): The prompt generator.
             messages (List[str]): The list of messages.
         """
+        
         pass
 
     @abc.abstractmethod

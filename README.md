@@ -156,7 +156,7 @@ This command creates a note inside the vault with a title, content, tags, and a 
 
 - [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT) - The main project that this plugin is for
 - [obsidian-tools](https://github.com/mfarragher/obsidiantools) - The python library that this plugin uses to interact with Obsidian Vaults.
-- [Microsoft Guidance](https://github.com/microsoft/guidance)
+- [Microsoft Guidance](https://github.com/microsoft/guidance) - Microsoft Python llm inferencing markup library. 
 - [Arcana  Plugin for Obsidian](https://github.com/evanaze/obsidian-asana-plugin) - Inspiation to make flashcard system. 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
