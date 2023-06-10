@@ -1,8 +1,8 @@
 """Import the OS module to operate using operating system of the operating computer."""
 import os
-import frontmatter 
 
-from obsidian.obsidian_vault import Obsidian_Vault
+import frontmatter
+from obsidian_vault import Obsidian_Vault
 
 class Obsidian_Note():
     """

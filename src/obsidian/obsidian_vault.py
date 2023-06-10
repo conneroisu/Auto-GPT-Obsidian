@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, List
 
-from obsidian.obsidian_note import Obsidian_Note
+from obsidian_note import Obsidian_Note
 import guidance
 
 import os

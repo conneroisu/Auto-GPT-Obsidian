@@ -1,28 +1,21 @@
-"""Obsidian Integrations for Auto-GPT using custom structures."""
-
-"""Import the operating system module"""
-import os
-
+"""This is a template for Auto-GPT plugins."""
+import abc
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, TypedDict
 
-from obsidian.obsidian_vault import Obsidian_Vault
-
-"""Import functions frrom the obsidian plugin"""
-from obsidian import _create_note
-
-"""Import the auto_gpt_plugin_template module for interactions with the autogpt plugin interfaces"""
-from auto_gpt_plugin_template import AutoGPTPluginTemplate
+from abstract_singleton import AbstractSingleton, Singleton
+from obsidian import Obsidian_Vault
 
 PromptGenerator = TypeVar("PromptGenerator")
+
 
 class Message(TypedDict):
     role: str
     content: str
 
 
-class AutoGPTObsidian(AutoGPTPluginTemplate):
+class AutoGPTObsidian(AbstractSingleton, metaclass=Singleton):
     """
-    Obsidian Integrations for Auto-GPT using obsidiantools and custom objects.
+    This is a template for Auto-GPT plugins.
     """
 
     def __init__(self):
@@ -30,13 +23,9 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
         self._name = "autogpt-obsidian"
         self._version = "0.1.0"
         self._description = "Obsidian Integrations for Auto-GPT using obsidiantools."
-        self.vault = Obsidian_Vault() 
+        self.vault = Obsidian_Vault()
 
-        if self.vault_path is None:
-            print(
-                "WARNING: The OBSIDIAN_VAULT_PATH environment variable is not set. Please set it to the path of the Obsidian vault wished to be interacted with."
-            )
-
+    @abc.abstractmethod
     def can_handle_on_response(self) -> bool:
         """This method is called to check that the plugin can
         handle the on_response method.
@@ -45,28 +34,18 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
             bool: True if the plugin can handle the on_response method."""
         return False
 
+    @abc.abstractmethod
     def on_response(self, response: str, *args, **kwargs) -> str:
         """This method is called when a response is received from the model."""
         pass
 
+    @abc.abstractmethod
     def can_handle_post_prompt(self) -> bool:
         """This method is called to check that the plugin can
         handle the post_prompt method.
 
         Returns:
             bool: True if the plugin can handle the post_prompt method."""
-        return True
-
-    def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
-        """This method is called just after the generate_prompt is called,
-            but actually before the prompt is generated.
-
-        Args:
-            prompt (PromptGenerator): The prompt generator.
-
-        Returns:
-            PromptGenerator: The prompt generator.
-        """
 
 
         prompt.add_command(
@@ -84,10 +63,22 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
             {},
             _sync_vault
         )
+        return True
 
+    @abc.abstractmethod
+    def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
+        """This method is called just after the generate_prompt is called,
+            but actually before the prompt is generated.
 
-        return prompt
+        Args:
+            prompt (PromptGenerator): The prompt generator.
 
+        Returns:
+            PromptGenerator: The prompt generator.
+        """
+        pass
+
+    @abc.abstractmethod
     def can_handle_on_planning(self) -> bool:
         """This method is called to check that the plugin can
         handle the on_planning method.
@@ -96,7 +87,10 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
             bool: True if the plugin can handle the on_planning method."""
         return False
 
-    def on_planning(self, prompt: PromptGenerator, messages: List[Message]) -> Optional[str]:
+    @abc.abstractmethod
+    def on_planning(
+        self, prompt: PromptGenerator, messages: List[Message]
+    ) -> Optional[str]:
         """This method is called before the planning chat completion is done.
 
         Args:
@@ -105,6 +99,7 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
         """
         pass
 
+    @abc.abstractmethod
     def can_handle_post_planning(self) -> bool:
         """This method is called to check that the plugin can
         handle the post_planning method.
@@ -113,6 +108,7 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
             bool: True if the plugin can handle the post_planning method."""
         return False
 
+    @abc.abstractmethod
     def post_planning(self, response: str) -> str:
         """This method is called after the planning chat completion is done.
 
@@ -124,6 +120,7 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
         """
         pass
 
+    @abc.abstractmethod
     def can_handle_pre_instruction(self) -> bool:
         """This method is called to check that the plugin can
         handle the pre_instruction method.
@@ -132,6 +129,7 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
             bool: True if the plugin can handle the pre_instruction method."""
         return False
 
+    @abc.abstractmethod
     def pre_instruction(self, messages: List[Message]) -> List[Message]:
         """This method is called before the instruction chat is done.
 
@@ -143,6 +141,7 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
         """
         pass
 
+    @abc.abstractmethod
     def can_handle_on_instruction(self) -> bool:
         """This method is called to check that the plugin can
         handle the on_instruction method.
@@ -151,6 +150,7 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
             bool: True if the plugin can handle the on_instruction method."""
         return False
 
+    @abc.abstractmethod
     def on_instruction(self, messages: List[Message]) -> Optional[str]:
         """This method is called when the instruction chat is done.
 
@@ -162,6 +162,7 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
         """
         pass
 
+    @abc.abstractmethod
     def can_handle_post_instruction(self) -> bool:
         """This method is called to check that the plugin can
         handle the post_instruction method.
@@ -170,6 +171,7 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
             bool: True if the plugin can handle the post_instruction method."""
         return False
 
+    @abc.abstractmethod
     def post_instruction(self, response: str) -> str:
         """This method is called after the instruction chat is done.
 
@@ -181,6 +183,7 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
         """
         pass
 
+    @abc.abstractmethod
     def can_handle_pre_command(self) -> bool:
         """This method is called to check that the plugin can
         handle the pre_command method.
@@ -189,8 +192,9 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
             bool: True if the plugin can handle the pre_command method."""
         return False
 
+    @abc.abstractmethod
     def pre_command(
-            self, command_name: str, arguments: Dict[str, Any]
+        self, command_name: str, arguments: Dict[str, Any]
     ) -> Tuple[str, Dict[str, Any]]:
         """This method is called before the command is executed.
 
@@ -203,6 +207,7 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
         """
         pass
 
+    @abc.abstractmethod
     def can_handle_post_command(self) -> bool:
         """This method is called to check that the plugin can
         handle the post_command method.
@@ -211,6 +216,7 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
             bool: True if the plugin can handle the post_command method."""
         return False
 
+    @abc.abstractmethod
     def post_command(self, command_name: str, response: str) -> str:
         """This method is called after the command is executed.
 
@@ -223,8 +229,10 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
         """
         pass
 
-    def can_handle_chat_completion(self, messages: Dict[Any, Any], model: str, temperature: float,
-                                   max_tokens: int) -> bool:
+    @abc.abstractmethod
+    def can_handle_chat_completion(
+        self, messages: Dict[Any, Any], model: str, temperature: float, max_tokens: int
+    ) -> bool:
         """This method is called to check that the plugin can
           handle the chat_completion method.
 
@@ -238,7 +246,10 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
               bool: True if the plugin can handle the chat_completion method."""
         return False
 
-    def handle_chat_completion(self, messages: List[Message], model: str, temperature: float, max_tokens: int) -> str:
+    @abc.abstractmethod
+    def handle_chat_completion(
+        self, messages: List[Message], model: str, temperature: float, max_tokens: int
+    ) -> str:
         """This method is called when the chat completion is done.
 
         Args:
@@ -252,24 +263,31 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
         """
         pass
 
-    def can_handle_text_embedding(self, text: str) -> bool:
+    @abc.abstractmethod
+    def can_handle_text_embedding(
+        self, text: str
+    ) -> bool:
         """This method is called to check that the plugin can
           handle the text_embedding method.
         Args:
-            text (str): The text to be converted to embedding.
+            text (str): The text to be convert to embedding.
           Returns:
               bool: True if the plugin can handle the text_embedding method."""
         return False
-
-    def handle_text_embedding(self, text: str) -> list:
+    
+    @abc.abstractmethod
+    def handle_text_embedding(
+        self, text: str
+    ) -> list:
         """This method is called when the chat completion is done.
         Args:
-            text (str): The text to be converted to embedding.
+            text (str): The text to be convert to embedding.
         Returns:
             list: The text embedding.
         """
         pass
 
+    @abc.abstractmethod
     def can_handle_user_input(self, user_input: str) -> bool:
         """This method is called to check that the plugin can
         handle the user_input method.
@@ -281,6 +299,7 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
             bool: True if the plugin can handle the user_input method."""
         return False
 
+    @abc.abstractmethod
     def user_input(self, user_input: str) -> str:
         """This method is called to request user input to the user.
 
@@ -293,6 +312,7 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
 
         pass
 
+    @abc.abstractmethod
     def can_handle_report(self) -> bool:
         """This method is called to check that the plugin can
         handle the report method.
@@ -301,6 +321,7 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
             bool: True if the plugin can handle the report method."""
         return False
 
+    @abc.abstractmethod
     def report(self, message: str) -> None:
         """This method is called to report a message to the user.
 
@@ -308,3 +329,4 @@ class AutoGPTObsidian(AutoGPTPluginTemplate):
             message (str): The message to report.
         """
         pass
+

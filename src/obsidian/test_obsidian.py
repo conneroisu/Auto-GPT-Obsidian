@@ -1,31 +1,49 @@
-"""
-Import the `os` module to access the environment variables from the `.env` file.
-"""
-import os
+from unittest import TestCase, main
+from obsidian import Obsidian
+import json 
+import random 
 
-from git.repo import Repo
-import pytest
+import pytest 
+import os 
+
+from functools import partial
+from unittest.mock import mock_open, patch
 import unittest
 
-def ObsidianVaultTest(unittest.TestCase): 
-    """ 
-    Testing Class for obsidian_vault.py
-    """
-    def test_construction_empty(self):  
-        # Constructing a Vault using public empty vault example should have 0 items as cotnents
-        empty_vault_url = "https://github.com/conneroisu/Empty-Obsidian-Vault-AutoGPT"   
-        empty_vault = ObsidianVault(empty_vault_url)         
-        assert len(empty_vault.contents) == 0
+class Test_Obsidian(unittest.TestCase):
 
-    def test_clone_empty(self):
-        # Constructing a Vault using public empty vault example should have 0 items as cotnents
-        empty_vault_url = "https://github.com/conneroisu/Empty-Obsidian-Vault-AutoGPT"
+    @patch.dict( 
+        os.environ, 
+        { 
+            "OBSIDIAN_FLASHCARD_DIRECTORY": "/flashcards",
+        }
+    )
 
-        # The vault should be cloned into the workspace of autoGPT 
-        empty_vault = ObsidianVault(empty_vault_url)
-        #
-        # Assert that the vault is cloned into the workspace as Empty-Obsidian-Vault-AutoGPT
-        assert os.path.exists("Empty-Obsidian-Vault-AutoGPT")
-    def arbitrary_test(self): 
-        assert 1==1
+    class Test_Obsidian_Vault(unittest.TestCase):
+        """Test the Obsidian vault class."""
 
+    def setUp(self):
+        self.obsidian = Obsidian()
+
+        
+    def test_find_note_by_title(self):
+        note = self.obsidian._find_note_by_title("My Note")
+        self.assertIsNotNone(note)
+        if note is None:
+            return
+        self.assertEqual(note.title, "My Note")
+
+    def test_create_note(self):
+        title = "New Note"
+        content = "This is a new note."
+        result = self.obsidian._create_note(title, content)
+        self.assertIsNone(result)
+        note = self.obsidian._find_note_by_title(title)
+        self.assertIsNotNone(note)
+        self.assertEqual(note.title, title)
+        self.assertEqual(note.content, content)
+
+    # Add more tests for other methods
+
+if __name__ == '__main__':
+    unittest.main()

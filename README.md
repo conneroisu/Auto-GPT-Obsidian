@@ -11,7 +11,7 @@
 <!-- PROJECT LOGO -->
 <br/>
 <div align="center">
-      <img src="docs/logoautogptobsidian.png" alt="Logo" width="80" height="80">
+      <img src="docs/assets/logoautogptobsidian.png" alt="Logo" width="80" height="80">
 <h3 align="center">Auto-GPT-Obsidian</h3>
 
   <p align="center">
@@ -39,12 +39,17 @@ This plugin for [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT) all
 
 ## Features
 
-- Provides various features that coinside with Obsidian Vault makdown standards and features 
-- Expand on or leave footnotes in you notes progrrammatically as autogpt or as commands from autogpt to futher discover an topic. 
-- Create notes in Obsidian with Auto-GPT automatically 
-- Create flashcards in Obsidian with Auto-GPT automatically with the [Spaced Repetition Plugin](https://github.com/st3v3nmw/obsidian-spaced-repetition) for [Obsidian MD](https://obsidian.md/). 
-- Use an (soon to be) Community Accepted Plugins for aiding in the syncing of your vault to this plugin, [git-gpt-sync](https://github.com/conneroisu/git-gpt-sync).  
-- Create notes in styled/templated markdown with Auto-GPT automatically 
+
+#### Enable AutoGPT with guided generate ai to create automatically flashcards for studying. (similar to the [arcana plugin](https://github.com/evanaze/obsidian-asana-plugin), but automatically generated from your notes).
+#### Automate the filling out of boing but potentially impotant metadata in notes in the vault.
+#### Enable AutoGPT with commands to find and integrate unlinked or lost notes from your Obsidian Vault 
+#### Enable AutoGPT with commands to house attached media files into a Folder Note similar to [Consistent Names](https://github.com/)
+#### Provides various features that coinside with Obsidian Vault makdown standards and features 
+#### Expand on or leave footnotes in you notes progrrammatically as autogpt or as commands from autogpt to futher discover an topic. 
+#### Create notes in Obsidian with Auto-GPT automatically 
+#### Create flashcards in Obsidian with Auto-GPT automatically with the [Spaced Repetition Plugin](https://github.com/st3v3nmw/obsidian-spaced-repetition) for [Obsidian MD](https://obsidian.md/). 
+#### Use an (soon to be) Community Accepted Plugins for aiding in the syncing of your vault to this plugin, [git-gpt-sync](https://github.com/conneroisu/git-gpt-sync).  
+#### Create notes in styled/templated markdown with Auto-GPT commands that feature guided generative ai programs. 
 
 
 ## Prerequisites
@@ -116,10 +121,6 @@ If you encounter problems or have any ideas, feel free to open an issue or pull 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Example Use Cases
-
-#### Ask Autogpt to create automatically flashcards for studying. (similar to the [arcana plugin](https://github.com/evanaze/obsidian-asana-plugin), but automatically generated from your notes).
-#### Automate the filling out of boing but potentially impotant metadata in notes in the vault.
 
 ## Contribution
 
