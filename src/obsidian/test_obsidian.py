@@ -4,7 +4,7 @@ import os
 """Import the pytest package for unit tests"""
 import pytest
 
-from obsidian import obsidianVault
+import obsidian
 
 """Import the partial from functools"""
 
@@ -13,7 +13,7 @@ from unittest.mock import mock_open, patch
 
 
 class TestObsidianVault:
-    """Testing Class for obsidianVault.py"""
+    """Testing Class for obsidian.py"""
 
 
     ## OBSIDIAN_VAULT_NAME - the name of the obsidian vault
@@ -21,6 +21,10 @@ class TestObsidianVault:
     ## OBSIDIAN_FLASHCARD_SUBDIRECTORY - the subdirectory in which to create flashcards with spaced repition format/syntax.
     ## OBSIDIAN_GITHUB_API_KEY - the API KEY to which responsibilities inside of the github repository ahave been allowed
     ## OBSIDIAN_GITHUB_USERNAME - the username of the account housing the github repository and key. 
+    def simple_test(self):
+
     def test_arbitrary(self):
         """Test the arbitrary function"""
         assert 1==1
+
+
