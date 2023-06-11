@@ -1,10 +1,16 @@
+"""Used for type checking and lists"""
 from typing import TYPE_CHECKING, List
 
+"""Obsidian Note Object for operating on marrkdown files within the obsidian vault"""
 from obsidian_note import Obsidian_Note
+
+"""Import the guidance llm python library for LLM prompting"""
 import guidance
 
+"""Operating System operations allowing for operating system integation"""
 import os
 
+"""Github Operations allowing for control of Git Operations for the Obsidian Vault"""
 from git.repo import Repo
 
 class Obsidian_Vault: 
@@ -13,15 +19,15 @@ class Obsidian_Vault:
     of Obsidian Markdown for the AutoGPT plugin, AutoGPT-Obsidian.
 
     This metaphorical obsidian vault class has a few native components on itself: 
-        - `markdown content` - The Markdown Files in the vault.  
-        - `vault path`       - The path of the vault within the file system.
-        - `vault name`       - The name of the vault. 
-        - `git url`          - The git url of the vault. 
-        - `git api key`      - The git api key of the vault. 
-        - `git username`     - The git username of the vault.
+          `markdown content` : The Markdown Files in the vault.  
+          `vault path`       : The path of the vault within the file system.
+          `vault name`       : The name of the vault. 
+          `git url`          : The git url of the vault. 
+          `git api key`      : The git api key of the vault. 
+          `git username`     : The git username of the vault.
     """
     def __init__(self) -> None:
-        """Initializes the Obsidian Vault Object."""
+        """Initializes the Obsidian Vault Object"""
         # Retreive the environment variables for the obsidian plugin
         self.initialize_environment_variables()
         self.sync_vault()
@@ -32,12 +38,11 @@ class Obsidian_Vault:
 
         
     def initialize_environment_variables(self) -> Exception|None:
-        """Initializes the environment variables for the Obsidian Plugin."""
+        """Initializes the Environment Variables for the Obsidian Plugin"""
         if os.getenv("OBSIDIAN_GITHUB_API_KEY"):
             self.git_api_key = os.getenv("OBSIDIAN_GITHUB_API_KEY")
         else: 
             return Exception("Please set the OBSIDIAN_GITHUB_API_KEY environment variable in the .env file.")
-            # False, "Please set the OBSIDIAN_GITHUB_API_KEY environment variable in the .env file."
 
         if os.getenv("OBSIDIAN_VAULT_GIT_URL"):
             self.git_url = os.getenv("OBSIDIAN_VAULT_GIT_URL") 
@@ -45,41 +50,33 @@ class Obsidian_Vault:
             return Exception("Please set the OBSIDIAN_VAULT_GIT_URL environment variable in the .env file.")
 
         if os.getenv("OBSIDIAN_GITHUB_USERNAME"):
-            # Initialize the Vault Object with the Git Username used by the repository owner to house the vault. 
             self.git_username = os.getenv("OBSIDIAN_GIT_USERNAME")
         else: 
             return Exception("Please set the OBSIDIAN_GIT_USERNAME environment variable in the .env file.")
 
         if os.getenv("OBSIDIAN_VAULT_NAME"): 
-            # Initialize the Vault Object with the name of the vault. 
             self.vault_name = str(os.getenv("OBSIDIAN_VAULT_NAME"))
         else:
             return Exception("Please set the OBSIDIAN_VAULT_NAME environment variable in the .env file.")
 
         if os.getenv("OBSIDIAN_VAULT_PATH"): 
-            # Initialize the Vault Object with the path of the vault. 
             self.vault_path = str(os.getenv("OBSIDIAN_VAULT_PATH")) 
         else:
             return Exception("Please set the OBSIDIAN_VAULT_PATH environment variable in the .env file.")
 
         if os.getenv("OBSIDIAN_GITHUB_API_KEY"): 
-            # Initialize the Vault Object with the Git API Key used to house the vault.
             self.git_api_key = os.getenv("OBSIDIAN_GITHUB_API_KEY")
         else: 
             return Exception("Please set the OBSIDIAN_GITHUB_API_KEY environment variable in the .env file.")
 
         if os.getenv("OBSIDIAN_FLASHCARD_DIRECTORY"): 
-            # Initialize the Vault Object with the Git API Key used to house the vault.
             self.flashcard_directory = os.getenv("OBSIDIAN_FLASHCARD_DIRECTORY")
             return None
         else: 
             return Exception("Please set the OBSIDIAN_FLASHCARD_DIRECTORY environment variable in the .env file.")
 
-
-
-
     def clone_vault(self) -> Exception|None:
-        """Clones the vault from the git url into the workspace."""
+        """Clones the Vault from the Vaults Git Url into the Workspace"""
         # Create the working directory
         working_directory = os.path.join(os.path.expanduser("~"), "autogpt"+ os.sep  +  "auto_gpt_workspace" + os.sep +  self.vault_name)
         os.makedirs(working_directory, exist_ok=True)
@@ -91,10 +88,10 @@ class Obsidian_Vault:
 
     def search_vault_title(self, title: str) -> Obsidian_Note|None:
         """ 
-        Searches the Obsidian Vault for a note with a given title.
-        
+        Searches the Obsidian Vault's content for a Obsidian_Note with a given title
+
         Parameters: 
-            - title: the title to search for inside of the vault.
+              title: the Title to `Search` for inside of the Vault.
         """
         pass 
         # For each file with a `.md` extension  as target:
@@ -113,7 +110,7 @@ class Obsidian_Vault:
         Git repository. If not, then it clones the remote Git repository into the workspace.
 
         Returns: 
-            - the result of the sync operation.
+            Exception or None for an exception thrown or successful operation
         """
         git_url = os.getenv("OBSIDIAN_VAULT_GIT_URL") 
         git_api_key = os.getenv("OBSIDIAN-GITHUB_API_KEY")
@@ -190,13 +187,9 @@ class Obsidian_Vault:
 
     # A function to get the content of the vault returning a list Obsidian_Note objects 
     def get_vault_content(self) -> list:
-            """
-            A Basic Function to get the content of the vault returning a list Obsidian_Note objects
-            """
-            # Create a list of notes
+            """A Basic Method to get the Content of the Vault returning a list Obsidian_Note Objects"""
             notes = []
 
-            # Iterate through the vault to find all notes
             for root , [] , files in os.walk(self.vault_path):
                 for file in files:
                     if file.endswith(".md"):
@@ -206,4 +199,12 @@ class Obsidian_Vault:
                             notes.append(note)
             return notes
 
+    def smart_seach(self, topic: str):
+        pass
 
+    def find_by_title(self, title) -> Obsidian_Note|None:
+        note = None
+        for note in self.content:
+            if (note.title == title):
+                return note
+        return None

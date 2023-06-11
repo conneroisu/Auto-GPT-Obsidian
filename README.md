@@ -15,7 +15,7 @@
 <h3 align="center">Auto-GPT-Obsidian</h3>
 
   <p align="center">
-    Power Auto-GPT with Your Obsidian Vault and Vise Versa!
+    Empower <a href="https://github.com/Significant-Gravitas/Auto-GPT">Auto-GPT</a> with one's <a href="https://obsidian.md/">Obsidian</a> Vault and Vise Versa!
   </p>
 </div>
 
@@ -33,7 +33,9 @@
 </details>
 
 ## Introduction 
-This plugin for [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT) allows for robust interactions with Obsidian Markdown Elements/Sytax. Also, this plugin povides toolings for [Auto-GPT Agents](https://github.com/Significant-Gravitas/Auto-GPT) to create flashcards and featured notes programmatically. Additionally, povides various interfaces of the corresponding data elements from notes. 
+This plugin for [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT) allows for robust interactions with Obsidian Markdown Elements/Sytax. Also, this plugin provides toolings for [Auto-GPT Agents](https://github.com/Significant-Gravitas/Auto-GPT) to create flashcards and featured notes programmatically. Additionally, povides various interfaces of the corresponding data elements from notes. 
+
+While [Obsidian](https://obsidian.md) has a multitude of plugin which change it's behavior within the context of markdown notes.
 
 
 

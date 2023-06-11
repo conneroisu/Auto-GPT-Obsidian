@@ -4,7 +4,7 @@
       <img src="docs/assets/logoautogptobsidian.png" alt="Logo" width="80" height="80">
 <h3 align="center">Auto-GPT-Obsidian</h3>
   <p align="center">
-    Power Auto-GPT with Your Obsidian Vault and Vise Versa!
+    Empower <a href="https://github.com/Significant-Gravitas/Auto-GPT">Auto-GPT</a> with one's <a href="https://obsidian.md/">Obsidian</a> Vault and Vise Versa!
   </p>
 </div>
 

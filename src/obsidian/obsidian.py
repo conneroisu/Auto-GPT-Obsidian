@@ -1,17 +1,20 @@
+"""Operating System Operations for Working with Files and Directories within the Operating System"""
 import os
 
+"""Guidance Library for Prompt LLM Models with a more Predictable, Definable Output"""
 import guidance
 
+"""Obsidian Note meta-object library to imitate the Operations and Attributes of notes inside of an Obsidian_Vault Object"""
 from obsidian_note import Obsidian_Note
+
+"""Obsidian Vault meta-object to imitate the operations of the Obsidian Vault"""
 from obsidian_vault import Obsidian_Vault
 
-""" Import the datetime module for accurate date and time. """
+"""Import the `datetime` Module for Accurate Time"""
 import datetime 
 
 class Obsidian:
-    """
-    Python Wrapper-like application interface for autogpt for Obsidian.md. 
-    """
+    """Python Wrapper-like application interface for autogpt for Obsidian.md"""
     def __init__(self):
         """Initializes an Obsidian object with a vault."""
         self.vault = Obsidian_Vault()
@@ -21,14 +24,13 @@ class Obsidian:
         )
 
     def _find_note_by_title(self, title: str) -> Obsidian_Note|None:
-        return next((note for note in self.vault.content if title == note.title), None)
+        return self.vault.find_by_title(title)
 
     def _create_note(self, title: str, content: str) -> Exception|None:
         """
         Create a note inside the vault with a title, content, tags, type,  and a summary within the frontmatter of said note following the Obsidian format
         Parameters:
             - title: The title of the note. In other words, the title is the name of the note. The title is also the name of the file to be produced.
-
             - content: the content of the note to be written in Markdown. In other words, the content of a note is the text to be placed in the main body of the note excluding the frontmatter. 
         Returns:
             - the created note content.
@@ -37,7 +39,6 @@ class Obsidian:
         # Sync the vault to most recent changes
         self.vault.sync_vault()
         
-        # Set guidance's OpenAI Model to "text-davinci-003"
         guidance.llm = guidance.llms.OpenAI("text-davinci-003")
 
         #geneal path ~/
@@ -46,16 +47,18 @@ class Obsidian:
 
         self.vault.git_url.split("/")[-1]
 
-        ## Handle Collisions  
         note = self._find_note_by_title(title)
         if note is not None:
             if note.content is not None:
                 if note.title == title:
                     return Exception("Note with title " + title + " exists in the vault.")
+
         note = self._find_note_by_title(title)
+
         if title.endswith(".md"):
             title = title[:-3]
             title = title + ".md"
+
         note = open(os.path.join(self.vault.vault_path, title), "w") 
         note = open(os.path.join(self.vault.vault_path, title), "w") 
 
@@ -88,8 +91,27 @@ class Obsidian:
             title=title
         )
 
-    def _create_markdown_file(self, title: str, content: str) -> str:
-        return ""
+    def _create_markdown_file(self, note_path: str, content: str) -> Exception|None:
+        """ 
+        Creats a markdown file and Obsidian Note housed inside the obsidian vault and the Obsidian_Vault object respectively.
+
+        Parrameters: 
+        - note_path : name of the file to crerate and the title of the note to create within the obsidian vault
+
+        """
+        if not note_path.endswith(".md"): 
+            note_path += ".md"
+        try: 
+            self._sync_vault()
+            note = Obsidian_Note(self.vault, note_path)
+        except Exception as e: 
+            return e
+
+        return None
+        
+
+
+
 
     def _sync_vault(self) -> str:
         """ 
@@ -108,12 +130,15 @@ class Obsidian:
 
     def _create_note_flashcards(self, title: str) -> Exception | None:
             """
-            Create a note containing spaced-repetition styled flashcards 
-            inside the vault with a title, content, tags, and a summary.
-            The title of the note from which flashcards are being generated
-            + "Flashcards" + number of flashcards for that note in the vault 
-            that were found to be in the vault to avoid name collisions.
+            Create Spaced-Repetition Styled Flashcards inside the vault with title, 
+            content, tags, and summary. The title of the note from which flashcards 
+            are being generated + "Flashcards" + number of flashcards for that note 
+            in the vault that were found to be in the vault to avoid name collisions.
+
+            Parameters: 
+                - title : the title of the note to create inside of the obsidian vault 
             """
+
             self._sync_vault()
 
             if title is None:
