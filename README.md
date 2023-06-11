@@ -2,11 +2,11 @@
 
 <a name="readme-top"></a>
 
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![License][license-shield]][license-url]
+[![contributors][contributors-shield]][contributors-url]
+[![forks][forks-shield]][forks-url]
+[![stargazers][stars-shield]][stars-url]
+[![issues][issues-shield]][issues-url]
+[![license][license-shield]][license-url]
 
 <!-- PROJECT LOGO -->
 <br/>
