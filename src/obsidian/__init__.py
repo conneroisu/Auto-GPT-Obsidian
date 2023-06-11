@@ -3,8 +3,11 @@ import abc
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, TypedDict
 
 from abstract_singleton import AbstractSingleton, Singleton
-from obsidian_vault import Obsidian_Vault
-from obsidian import _create_note, _sync_vault
+
+
+
+"""Obsidian Vault meta-object to imitate the operations of the Obsidian Vault"""
+from obsidian import obsidianVault
 
 PromptGenerator = TypeVar("PromptGenerator")
 
@@ -21,7 +24,7 @@ class AutoGPTObsidian(AbstractSingleton, metaclass=Singleton):
         self._name = "autogpt-obsidian"
         self._version = "0.1.0"
         self._description = "Obsidian Integrations for Auto-GPT using obsidiantools."
-        self.vault = Obsidian_Vault() 
+        self.vault = obsidianVault() 
 
     @abc.abstractmethod
     def can_handle_on_response(self) -> bool:
@@ -58,7 +61,7 @@ class AutoGPTObsidian(AbstractSingleton, metaclass=Singleton):
         Returns:
             PromptGenerator: The prompt generator.
         """
-        
+        from obsidian import (_create_note, _sync_vault)
         prompt.add_command(
             "obsidian_create_note",
             "Create a new Obsidian note in the vault with a given title and content.",

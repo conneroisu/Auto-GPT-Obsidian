@@ -1,8 +1,8 @@
-"""Used for type checking and lists"""
+"""For Type Checking and Lists"""
 from typing import TYPE_CHECKING, List
 
-"""Obsidian Note Object for operating on marrkdown files within the obsidian vault"""
-from obsidian_note import Obsidian_Note
+"""Obsidian Note Object for operating representing markdown files in the vault""" 
+from obsidian import obsidianNote
 
 """Import the guidance llm python library for LLM prompting"""
 import guidance
@@ -13,7 +13,7 @@ import os
 """Github Operations allowing for control of Git Operations for the Obsidian Vault"""
 from git.repo import Repo
 
-class Obsidian_Vault: 
+class obsidianVault: 
     """
     Vault Object allowing for interactions with markdown notes specifically with the syntax 
     of Obsidian Markdown for the AutoGPT plugin, AutoGPT-Obsidian.
@@ -28,11 +28,9 @@ class Obsidian_Vault:
     """
     def __init__(self) -> None:
         """Initializes the Obsidian Vault Object"""
-        # Retreive the environment variables for the obsidian plugin
+        # Retrieve the environment variables for the obsidian plugin
         self.initialize_environment_variables()
         self.sync_vault()
-        self.path = None
-        self.tags = None  
         self.vault_directory = os.sep.join([ os.path.expanduser("~"), "autogpt", "auto_gpt_workspace", self.vault_name ])
         self.content = self.get_vault_content()
 
@@ -86,15 +84,14 @@ class Obsidian_Vault:
         except Exception as e:
             return e
 
-    def search_vault_title(self, title: str) -> Obsidian_Note|None:
+    def search_vault_title(self, title: str) -> obsidianNote:
         """ 
-        Searches the Obsidian Vault's content for a Obsidian_Note with a given title
+        Searches the Obsidian Vault's content for an Obsidian_Note with a given title
 
         Parameters: 
-              title: the Title to `Search` for inside of the Vault.
+              title: the Title to `Search` for inside the Vault.
         """
-        pass 
-        # For each file with a `.md` extension  as target:
+        # For each file with a `.md` extension as target:
         # for ob_note in self.markdown_content: 
         # List result = 
         for note in self.content:
@@ -195,16 +192,23 @@ class Obsidian_Vault:
                     if file.endswith(".md"):
                         with open(os.path.join(root, file), "r"):
                             # Create a new Obsidian_Note object with a reference to the Obsidian_Vault object
-                            note = Obsidian_Note(self, note_path=os.path.join(root, file))
+                            note = obsidianNote(self, note_path=os.path.join(root, file))
                             notes.append(note)
             return notes
 
     def smart_seach(self, topic: str):
         pass
 
-    def find_by_title(self, title) -> Obsidian_Note|None:
-        note = None
+    def find_by_title(self, title:str) -> obsidianNote:
+        """Finds an Obsidian_Note by its Title"""
+        notez = None
         for note in self.content:
             if (note.title == title):
-                return note
-        return None
+                notez = note
+                return notez
+        return None  
+
+    def create_note(self, title: str, content: str = "") -> obsidianNote:
+        """Creates a new Obsidian_Note in the Vault"""
+        note = obsidianNote(self, note_path )
+        return note

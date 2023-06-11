@@ -1,18 +1,17 @@
 """perate using operating system of the docker container"""
 import os
 
-from obsidian.example_avl import avl_Node
 
 """the library `python-frontmatter` for working with frontmatters of files"""
 import frontmatter
 
 """Obsidian Vault Meta Object for working for files inside of the obsidian vault"""
-from obsidian_vault import Obsidian_Vault
+from obsidian import obsidianVault
 
-class Obsidian_Note(avl_Node):
+class obsidianNote():
     """Note object allowing for inteactions with markdown notes with the syntax of Obsidian for the AutoGPT plugin, AutoGPTObsidian"""
 
-    def __init__(self, vault: Obsidian_Vault, note_path) -> None: 
+    def __init__(self, vault: obsidianVault, note_path) -> None: 
         """
         Initialize the Obsidian_Note object with the given vault_path inside of the AutoGPT Workspace.
 
@@ -28,7 +27,7 @@ class Obsidian_Note(avl_Node):
 
         with open(os.path.join(vault.vault_directory, note_path)) as f:
             self.frontmatter = frontmatter.load(f)
-            self.update_note_attributes(f.read())
+            self.update_note_attributes()
         
 
     def reload(self) -> None: 
@@ -37,9 +36,9 @@ class Obsidian_Note(avl_Node):
             self.content = f.read()
         if self.content is None: 
             self.content = ""
-        self.update_note_attributes(self.content)
+        self.update_note_attributes()
 
-    def update_note_attributes(self, context:str) -> None: 
+    def update_note_attributes(self) -> None: 
         """
         Updates the attributes of the Obsidian_Note object based on the content of the note give as context, a string.
         Updates the following attributes: tags, incoming_links, outgoing_links, frontmatter, dataview_metadata, and dataview_metadata_fields 
@@ -47,29 +46,32 @@ class Obsidian_Note(avl_Node):
         Parameters: 
             context : string representing the the content of the note to update the ntoe attributes on 
         """
-        self.tags = self.get_tags(context)
-        
         with open(self.path, "r") as file: 
             self.content = file.read()
+        self.tags = self.get_tags()
+        
 
 
-    def get_tags(self, content) -> list: 
+    def get_tags(self) -> list:
         """
         Retreives the tags of the note defined in Frontmatter syntax, obsidian content syntax, and dataview syntax. It first checks the frontmatter, then the content, then for tags defined in the dataview syntax.
 
         Returns: 
             list : A list of tags marked with the note for this Obsidian_Vault Object
         """
+        self.update_note_attributes()
         ### FRONTMATTER ###
         tags = []
         ### CONTENT ###
-        for line in content.split("\n"): 
+        for line in self.content.split("\n"): 
             # split around spaces
-            for word in line.split(" "): 
-                if word.startswith("#"): 
-                    tags.append(word.replace("#", ""))
+            tags.extend(
+                word.replace("#", "")
+                for word in line.split(" ")
+                if word.startswith("#")
+            )
         ### DATAVIEW ### 
-        for line in content.split("\n"): 
+        for line in self.content.split("\n"): 
             if line.startswith("tags::"): 
                 tags += line.replace("tags::", "").strip().split(" ")
         return tags
